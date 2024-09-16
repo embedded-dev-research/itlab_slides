@@ -1,0 +1,3 @@
+\beamer@sectionintoc {1}{What is git?}{3}{0}{1}
+\beamer@sectionintoc {2}{Basic git commends}{4}{0}{2}
+\beamer@sectionintoc {3}{Git workflows overview}{8}{0}{3}
