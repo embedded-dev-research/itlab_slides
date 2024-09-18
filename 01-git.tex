@@ -40,23 +40,215 @@
     \tableofcontents
 \end{frame}
 
-\section{What is git?}
+\section{What are version control systems?}
 
-\begin{frame}{What is git?}
+\begin{frame}{Version control systems}
+  \textbf{A version control system (VCS)} is a software tool that helps individuals and teams manage changes to source code, documents, and other collections of information over time.
+  \begin{itemize}
+    \item It is a persistent data structure (data structure that maintains its previous versions after modifications, allowing access to both current and past versions of the data)
+    \item This is in contrast to ephemeral data structures, where changes overwrite the current state, losing prior versions
+  \end{itemize}
 \end{frame}
 
-\section{Basic git commends}
+\section{What version control systems exist? History and evolution}
 
-\begin{frame}{Creating new repo}
+\begin{frame}{Early Days of Computing (1950s - 1970s). SCCS}
+  Before the development of dedicated version control systems, programmers used manual processes to manage changes. Early systems, like the Source Code Control System (SCCS), developed by Marc Rochkind at Bell Labs in 1972, were among the first tools created to automate version control. SCCS stored multiple versions of code and helped manage modifications through change sets, allowing programmers to revert to earlier versions if necessary.
+  \begin{block}{SCCS subcommands}
+    admin -i file.f s.file.f - Put subs under SCCS control.\\
+    get s.file.f - Retrieve, read only.\\
+    get -e s.file.f - Retrieve, read/write (e = edit).\\
+    get -p s.file.f - Retrieve, just peak.\\
+    delta s.file.f - Store changes.\\
+    prs s.file.f - List revisions.\\
+  \end{block}
+
+  \footnotesize Source: \href{https://sites.science.oregonstate.edu/~landaur/nacphy/coping-with-unix/node169.html}{https://sites.science.oregonstate.edu/~landaur/nacphy/coping-with-unix/node169.html}
 \end{frame}
 
-\begin{frame}{First commit}
+\begin{frame}{Centralized Version Control Systems (1980s - 1990s)}
+  Centralized version control systems (CVCS) came to prominence during the 1980s. These systems required a single, central server where all files and version histories were stored. Developers had to be connected to this server to commit changes or retrieve updates.
+  \begin{itemize}
+    \item RCS (Revision Control System): Developed by Walter Tichy in the early 1980s, RCS is a more advanced system than SCCS. It introduced features like automated version numbering and handling of concurrent edits, but it was still a single-user system.
+    \item CVS (Concurrent Versions System): Introduced in 1990, CVS extended RCS with support for multiple developers working on the same project. It allowed distributed teams to collaborate more effectively, although merging changes was often difficult.
+    \item SVN (Subversion): developed as an improvement over older systems like CVS. It was created by CollabNet in 2000 and later became an Apache project.
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Branch}
+\begin{frame}{Distributed Version Control Systems (2000s)}
+  The limitations of centralized systems (reliance on a single server), led to the development of distributed version control systems (DVCS) in the early 2000s. In DVCS, every developer has a complete copy of the project, including its entire history, on their local machine.
+  \begin{itemize}
+    \item BitKeeper (1998): BitKeeper was one of the first DVCS, created by Larry McVoy. It gained fame for being used by the Linux kernel project until a licensing dispute in 2005 led to its discontinuation in favor of free alternatives.
+    \item Git (2005): Linus Torvalds, creator of Linux, developed Git after the fallout with BitKeeper. Git was designed with performance, flexibility, and speed in mind, especially for large projects like the Linux kernel. Git introduced powerful features such as branching, merging, and decentralized collaboration.
+    \item Mercurial (2005): Developed around the same time as Git, Mercurial is another DVCS designed for speed and scalability. While it shares many similarities with Git, it is known for being more user-friendly and consistent in behavior.
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{git log}
+\section{What is Git?}
+
+\begin{frame}{What is Git?}
+  \begin{itemize}
+    \item Git is a distributed version control system (DVCS) for tracking changes in source code during software development.
+    \item Created by Linus Torvalds in 2005.
+    \item Allows multiple developers to efficiently work on the same project and creates and environment for effective collaboration on software project.
+    \item Key features:
+    \begin{itemize}
+        \item Distributed architecture
+        \item Free and open source
+        \item Wide usage in the industry
+        \item Speed and efficiency
+        \item Data integrity
+        \item Support for non-linear development (parallel work on different features)
+        \item History and blame tracking
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Basic Git commands}
+
+\begin{frame}{Key concepts}
+  \begin{itemize}
+    \item Version control system
+    \item Repository
+    \item Commit
+    \item Branch
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Download Git}
+  \begin{enumerate}
+      \item Navigate to the official Git website: \url{https://git-scm.com/}
+      \item Click on the \textbf{Downloads} section.
+      \item Select the appropriate version for your operating system (Windows, macOS, Linux).
+      \item Follow the installation instructions provided.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Creating a New Repository}
+  \begin{itemize}
+    \item Initialize a new Git repository in an existing directory:
+    \begin{block}{Command}
+        \texttt{git init}
+    \end{block}
+    \item Clone an existing repository:
+    \begin{block}{Command}
+        \texttt{git clone <repository-url>}
+    \end{block}
+      This could be the repository hosted anywhere (GitHub, GitLab or other platforms) or local repository
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Commit}
+  In Git, a commit is a fundamental unit of change.
+  Commit has a unique identifier (commit hash) and it holds a number of options:
+  \begin{itemize}
+    \item Hash: unique identifier (SHA-1 checksum).
+        This allows Git to uniquely identify each commit in the history of the project.
+    \item Message: description (what was done in this change)
+    \item Author (name, e-mail)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Commit message}
+  Generally consists of two parts:
+  \begin{itemize}
+    \item Subject line (summary)
+      \begin{itemize}
+        \item Usually is short (up to 50 characters)
+        \item Imperative is used (e.g., "Fix bug in user login" or "Add tests for API endpoint").
+        \item Avoid periods at the end of the line
+      \end{itemize}
+    \item Body (optional)
+      \begin{itemize}
+        \item Wrap lines at 72 characters
+        \item Explain why the change was made, rather than just what was done (the code diff itself explains the "what").
+      \end{itemize}
+  \end{itemize}
+  \begin{block}{Commit message example}
+    Add caching for user profile data\vspace{1em}
+
+    This improves the performance of loading user profiles by
+    caching the data in memory. Previously, each request would
+    query the database, which caused a significant slowdown.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Commit best practices}
+  \begin{itemize}
+    \item Write meaningful commit messages: Follow the rules from previous slide. This helps others (and future you) understand the purpose of each commit.
+    \item Make small, logical commits: Each commit should represent a single logical change. Avoid lumping multiple unrelated changes into one commit.
+      \begin{itemize}
+        \item If you can split your commit into two in many cases it is better to do this.
+        \item If your commit message contains the word "and" this might be a signal that commit can be split
+      \end{itemize}
+    \item Write meaningful commit messages: This helps others (and future you) understand the purpose of each commit.
+    \item Commit often: Regular commits allow you to track progress and makes it easier to revert to a stable state if something goes wrong.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Commit importance}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{images/in-case-of-fire.png}
+    \label{fig:in-case-of-fire}
+  \end{figure}
+  {\footnotesize Source: \href{https://github.com/hendrixroa/in-case-of-fire}{https://github.com/hendrixroa/in-case-of-fire}}
+\end{frame}
+
+\begin{frame}{First Commit}
+  \begin{itemize}
+      \item Check the status of your repository:
+      \begin{block}{Command}
+        \texttt{git status}
+      \end{block}
+      \item Stage files for commit:\\
+        Before you make a commit, changes must be added to the \textbf{staging area} using \texttt{git add}. This allows you to carefully select which changes to include in a commit. For example, you might only want to commit changes to one file, even if you've modified several others.
+      \begin{block}{Command}
+        \texttt{git add <file>}
+      \end{block}
+      \item Commit changes:
+      \begin{block}{Command}
+          \texttt{git commit -m "Commit message"}
+      \end{block}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Branches in Git}
+  \footnotesize
+  In Git, a branch represents an independent line of development, enabling you to work on different features, fixes, or experiments without affecting the main line of the project.\\
+  \textbf{A branch} is a movable pointer to a commit. It allows users to develop different project directions in parallel.\\
+  e.g. several developers are working on several different independant features
+  \begin{itemize}
+      \item Create a new branch:
+      \begin{block}{Command}
+        \texttt{git branch <branch-name>}
+      \end{block}
+      \item Switch to a branch:
+      \begin{block}{Command}
+        \texttt{git checkout <branch-name>}
+      \end{block}
+      \item Create and switch to a new branch:
+      \begin{block}{Command}
+        \texttt{git checkout -b <branch-name>}
+      \end{block}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Viewing Commit History}
+  \begin{itemize}
+    \item View the commit history:
+    \begin{block}{Command}
+      \texttt{git log}
+    \end{block}
+    \item View a summarized commit history (one line per commit):
+    \begin{block}{Command}
+      \texttt{git log --oneline}
+    \end{block}
+    \item View graphical representation of branches:
+    \begin{block}{Command}
+      \texttt{git log --graph --oneline --all}
+    \end{block}
+  \end{itemize}
 \end{frame}
 
 \section{Git workflows overview}
