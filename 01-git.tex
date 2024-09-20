@@ -253,16 +253,90 @@
 
 \section{Git workflows overview}
 
-\begin{frame}{Push to master (linear history approach)}
+\begin{frame}{Push to Master (Linear history approach)}
+  \begin{itemize}
+      \item All changes are made directly to the \texttt{master} branch.
+      \item Simplest workflow, suitable for small projects.
+      \item Potential issues:
+      \begin{itemize}
+          \item Conflicts when multiple developers push simultaneously.
+          \item No isolation for new features or bug fixes.
+      \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Use of "feature branches"}
+\begin{frame}{Using Feature Branches}
+  \begin{itemize}
+      \item Create separate branches for new features or bug fixes.
+      \item Benefits:
+      \begin{itemize}
+          \item Isolates development work.
+          \item Facilitates code reviews.
+          \item Safe integration into \texttt{master} after testing.
+      \end{itemize}
+      \item Workflow:
+      \begin{enumerate}
+          \item Create a new branch: \texttt{git checkout -b <feature-branch>}
+          \item Develop and commit changes on the feature branch.
+          \item Merge back into \texttt{master} when ready.
+      \end{enumerate}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{GitHub Flow}
+  \begin{itemize}
+      \item Lightweight, branch-based workflow suitable for continuous deployment.
+      \item Steps:
+      \begin{enumerate}
+          \item \textbf{Create a branch} for your work.
+          \item \textbf{Commit} changes to your branch.
+          \item \textbf{Open a Pull Request} when your work is ready.
+          \item \textbf{Discuss and review} your code.
+          \item \textbf{Merge} the Pull Request once approved.
+          \item \textbf{Deploy} to production.
+      \end{enumerate}
+      \item Benefits:
+      \begin{itemize}
+        \item Emphasizes collaboration and code quality.
+        \item Organized workflow for medium projects (a team or several teams that consist of several people).
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{GitHub Flow}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{images/github-flow.png}
+    \label{fig:github-flow}
+  \end{figure}
+  {\footnotesize Source: \href{https://github.com/a-a-ron/Github-Flow}{https://github.com/a-a-ron/Github-Flow}}
 \end{frame}
 
 \begin{frame}{Git Flow}
+  \begin{itemize}
+      \item A robust branching model for managing releases.
+      \item Defines specific branches:
+      \begin{itemize}
+          \item \textbf{master} - contains production-ready code.
+          \item \textbf{develop} - integration branch for features.
+          \item \textbf{feature branches} - for new features.
+          \item \textbf{release branches} - prepare for a new production release.
+          \item \textbf{hotfix branches} - quick fixes for production.
+      \end{itemize}
+      \item Benefits:
+      \begin{itemize}
+          \item Organized workflow for large projects.
+          \item Clear separation of different types of work.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Git Flow}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[height=0.87\textheight]{images/git-flow.png}
+    \label{fig:git-flow}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
