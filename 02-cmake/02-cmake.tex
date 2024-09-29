@@ -7,6 +7,28 @@
 \usepackage{graphicx} % For including images
 \usepackage{amsmath}  % For math symbols and formulas
 \usepackage{hyperref} % For hyperlinks
+\usepackage{listings} % For code listings
+\usepackage{xcolor}   % For color definitions
+
+\lstdefinestyle{CStyle}{
+  language=C,                    % Set the language to C
+  basicstyle=\ttfamily\footnotesize\linespread{0.9}\tiny, % Set font style and size
+  keywordstyle=\color{blue},      % Color of keywords
+  commentstyle=\color{gray},      % Color of comments
+  stringstyle=\color{red},        % Color of strings
+  showstringspaces=false,         % Do not mark spaces in strings
+  breaklines=true,                % Enable line breaks at appropriate places
+  breakatwhitespace=false,        % Break lines at any character, not just whitespace
+  numbers=left,                   % Show line numbers on the left
+  numberstyle=\tiny\color{gray},  % Style for line numbers
+  tabsize=4,                      % Set tab width
+  keepspaces=true,                % Keep indentation spaces
+  frame=single,                   % Add a border around the code
+  aboveskip=0pt,                  % Reduce space above the code block
+  belowskip=0pt,                   % Reduce space below the code block
+  xleftmargin=7.5pt,                      % Add left padding (approx. 2.8mm or 10px)
+  xrightmargin=15pt,                      % Add left padding (approx. 2.8mm or 10px)
+}
 
 \title[CMake]{CMake}
 \author{Obolenskiy Arseniy, Nesterov Alexander}
@@ -40,9 +62,342 @@
     \tableofcontents
 \end{frame}
 
-\section{Introduction}
+\section{Building C++ projects}
 
-\begin{frame}{Slide}
+\begin{frame}[fragile]{C++ "Hello, World" example}
+  \lstset{style=CStyle, caption=Hello World example}
+  \begin{lstlisting}
+    #include <iostream>
+
+    int main() {
+        std::cout << "Hello, World!" << std::endl;
+        return 0;
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Building simple main.cpp on UNIX}
+  \begin{itemize}
+    \item Open a terminal.
+    \item Navigate to the directory containing \texttt{main.cpp}.
+    \item Compile the program using \texttt{g++}:
+    \begin{lstlisting}[language=bash]
+g++ -o hello main.cpp
+    \end{lstlisting}
+    \item Run the executable:
+    \begin{lstlisting}[language=bash]
+./hello
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building simple main.cpp on Windows}
+  \begin{itemize}
+    \item Open the Command Prompt.
+    \item Navigate to the directory containing \texttt{main.cpp}.
+    \item If using MinGW:
+    \begin{lstlisting}[language=bash]
+g++ -o hello.exe main.cpp
+hello.exe
+    \end{lstlisting}
+    \item If using Visual Studio Developer Command Prompt:
+    \begin{lstlisting}[language=bash]
+cl /EHsc main.cpp
+main.exe
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Simple library example}
+  Assuming there is a simple library that contains a function \texttt{add}:
+
+  \lstset{style=CStyle, caption=add.h}
+  \begin{lstlisting}
+#ifndef ADD_H
+#define ADD_H
+
+int add(int x, int y);
+
+#endif // ADD_H
+  \end{lstlisting}
+
+  \lstset{style=CStyle, caption=add.cpp}
+  \begin{lstlisting}
+  #include "add.h"
+  
+  int add(int x, int y) {
+      return x + y;
+  }
+  \end{lstlisting}
+
+  \lstset{style=CStyle, caption=main.cpp}
+  \begin{lstlisting}
+    #include <iostream>
+    #include "add.h"
+    
+    int main() {
+        int result = add(5, 3);
+        std::cout << "5 + 3 = " << result << std::endl;
+        return 0;
+    }
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Building simple main.cpp with add library on UNIX}
+  \begin{itemize}
+    \item Compile \texttt{add.cpp} into an object file:
+    \begin{lstlisting}[language=bash]
+g++ -c add.cpp
+    \end{lstlisting}
+    \item Compile \texttt{main.cpp} into an object file:
+    \begin{lstlisting}[language=bash]
+g++ -c main.cpp
+    \end{lstlisting}
+    \item Link the object files into an executable:
+    \begin{lstlisting}[language=bash]
+g++ -o program main.o add.o
+    \end{lstlisting}
+    \item Run the executable:
+    \begin{lstlisting}[language=bash]
+./program
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building simple main.cpp with add library on Windows}
+  Using MinGW:
+  \begin{itemize}
+    \item Compile \texttt{add.cpp}:
+    \begin{lstlisting}[language=bash]
+g++ -c add.cpp
+    \end{lstlisting}
+    \item Compile \texttt{main.cpp}:
+    \begin{lstlisting}[language=bash]
+g++ -c main.cpp
+    \end{lstlisting}
+    \item Link the object files:
+    \begin{lstlisting}[language=bash]
+g++ -o program.exe main.o add.o
+    \end{lstlisting}
+  \end{itemize}
+
+  Using Visual Studio Developer Command Prompt:
+  \begin{itemize}
+    \item Compile and link:
+    \begin{lstlisting}[language=bash]
+cl /EHsc main.cpp add.cpp
+    \end{lstlisting}
+    \item Run the executable:
+    \begin{lstlisting}[language=bash]
+program.exe
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\section{Build systems history}
+
+\begin{frame}{Build systems}
+  There are various build systems for different environments:
+
+  \begin{itemize}
+    \item Make
+    \item Autoconf/Automake
+    \item CMake
+    \item Ninja
+    \item Meson
+    \item Bazel
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Make}
+  \begin{itemize}
+    \item Traditional build tool using Makefiles.
+    \item Defines rules and dependencies for compiling code.
+    \item Widely used on UNIX systems.
+    \item Simple but can become complex for large projects.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Autoconf/Automake}
+  Autoconf is the colution to automatically generate Makefiles.
+  \begin{itemize}
+    \item Part of the GNU build system.
+    \item Generates portable Makefiles.
+    \item Handles platform-specific configurations.
+    \item Useful for open-source projects targeting multiple UNIX-like systems.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake}
+  \begin{itemize}
+    \item Cross-platform build system generator.
+    \item Generates native build files (Makefiles, Visual Studio solutions, etc.).
+    \item Supports complex project configurations.
+    \item Widely adopted in both open-source and commercial projects.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ninja}
+  \begin{itemize}
+    \item Focused on speed and efficiency.
+    \item Uses a simple build file format.
+    \item Often used as a backend by higher-level build systems like CMake and Meson.
+    \item Not intended to be written by hand.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Meson}
+  \begin{itemize}
+    \item High-level build system with a simple syntax.
+    \item Uses Ninja as its default backend.
+    \item Designed for fast and user-friendly builds.
+    \item Supports multiple programming languages.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bazel}
+  \begin{itemize}
+    \item Developed by Google for large-scale projects.
+    \item Focuses on build correctness and reproducibility.
+    \item Supports multiple languages and platforms.
+    \item Uses a domain-specific language for build definitions.
+  \end{itemize}
+\end{frame}
+
+\section{CMake}
+
+\begin{frame}{Why CMake?}
+  \begin{itemize}
+    \item Cross-platform compatibility.
+    \item Generates native build systems.
+    \item Handles complex build requirements.
+    \item Strong community support and documentation.
+    \item Integrates well with IDEs and other tools.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Download CMake}
+  \begin{itemize}
+    \item Official website: \url{https://cmake.org}
+    \item Available for Windows, macOS, and Linux.
+    \item Installation via package managers:
+    \begin{itemize}
+      \item On Ubuntu:
+      \begin{lstlisting}[language=bash]
+sudo apt-get install cmake
+      \end{lstlisting}
+      \item On macOS with Homebrew:
+      \begin{lstlisting}[language=bash]
+brew install cmake
+      \end{lstlisting}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{CMake script for main.cpp with add library}
+  \begin{block}{CMakeLists.txt}
+    \begin{lstlisting}
+cmake_minimum_required(VERSION 3.0)
+project(HelloAdd)
+
+add_library(add add.cpp)
+add_executable(main main.cpp)
+target_link_libraries(main add)
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{CMake configure and CMake build commands}
+  \begin{itemize}
+    \item Create a build directory:
+    \begin{lstlisting}[language=bash]
+mkdir build
+cd build
+    \end{lstlisting}
+    \item Configure the project:
+    \begin{lstlisting}[language=bash]
+cmake ..
+    \end{lstlisting}
+    \item Build the project:
+    \begin{lstlisting}[language=bash]
+cmake --build .
+    \end{lstlisting}
+    \item Run the executable:
+    \begin{lstlisting}[language=bash]
+./main    # On UNIX
+main.exe  # On Windows
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{CMake configure and CMake build commands}
+  Usage of \texttt{-S} and \texttt{-B} is encouraged:
+
+  \begin{itemize}
+    \item Configure the project:
+    \begin{lstlisting}[language=bash]
+cmake -S . -B build
+    \end{lstlisting}
+    \item Build the project:
+    \begin{lstlisting}[language=bash]
+cmake --build build
+    \end{lstlisting}
+    \item Run the executable:
+    \begin{lstlisting}[language=bash]
+./build/main    # On UNIX
+build/main.exe  # On Windows
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake configure}
+  \begin{itemize}
+    \item Confgure
+    \item Build
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake configure}
+  In a typical CMake-based build process, there are two primary stages: the configure step and the build step.
+  \begin{itemize}
+    \item Purpose: To inspect the system, check dependencies, and generate platform-specific build files (like Makefile, ninja files, or Visual Studio project files).
+    \item Outcome: After this step, the necessary files for building the project are ready and platform-specific. The project isn't compiled yet, but CMake has configured everything based on the system environment, the user options, and the project setup.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake configure (continued)}
+  \footnotesize
+  What Happens on CMake confguration stage?
+  \begin{itemize}
+    \item CMakeLists.txt Processing: CMake reads the CMakeLists.txt files in your project. This file describes how the project should be built, which dependencies are needed, which source files to compile, etc.
+    \item Checking Dependencies: CMake will check for external libraries and dependencies, ensuring they are installed and can be found (e.g., checking for required packages, libraries).
+    \item Compiler and Toolchain Discovery: CMake will determine which compilers (e.g., GCC, Clang, MSVC) and toolchains to use based on the environment or user input.
+    \item Configuration Options: During this step, you can also pass configuration options to CMake using the -D flag, which can influence how the project is built (e.g., enabling/disabling certain features or setting paths).
+    \item Build File Generation: CMake generates the actual build system files (like Makefile, Ninja files, or Visual Studio solution files) in the output directory (typically in a build/ folder). These files are specific to the build system chosen by the user (e.g., Make, Ninja, MSBuild).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake build}
+  The build step is where the actual compilation and linking take place.
+  \begin{itemize}
+    \item Purpose: To compile the source code into binary executables, libraries, or other artifacts based on the configuration done in the previous step.
+    \item Outcome: After this step, the output files (executables, libraries, etc.) are created and are ready to be run or installed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake build (continued)}
+  What Happens on CMake build stage?
+  \begin{itemize}
+    \item Calling Build System: The generated build files from the configure step (like Makefile or ninja.build files) are invoked by CMake to compile the code.
+    \item Compiling Source Code: The build system uses the appropriate compiler to compile the source code into object files.
+    \item Linking: Once the object files are generated, the linker combines them into final binaries (e.g., an executable or shared library).
+    \item Error/Warning Reporting: If there are any syntax errors, missing files, or other issues, they will typically surface during this step, as the code is actively being compiled.
+    \item Rebuilding: CMake build system will track changes to source files. If you make changes to specific files and run the build step again, only the modified files are recompiled (i.e., incremental builds).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CMake demo}
+  Demo
 \end{frame}
 
 \begin{frame}
@@ -51,6 +406,11 @@
 \end{frame}
 
 \begin{frame}{References}
+  \begin{enumerate}
+    \item CMake Download \href{https://cmake.org/download/}{https://cmake.org/download/}
+    \item CMake Tutorial \href{https://cmake.org/cmake/help/latest/guide/tutorial/index.html}{https://cmake.org/cmake/help/latest/guide/tutorial/index.html}
+    \item An Introduction to Modern CMake \href{https://cliutils.gitlab.io/modern-cmake/README.html}{https://cliutils.gitlab.io/modern-cmake/README.html}
+  \end{enumerate}
 \end{frame}
 
 \end{document}
