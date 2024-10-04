@@ -21,6 +21,7 @@ jobs:
     - name: Build
       run: |
         find . -iname '*.tex' -execdir pdflatex -output-directory $GITHUB_WORKSPACE {} \; || exit 1
+        find . -iname '*.tex' -execdir pdflatex -output-directory $GITHUB_WORKSPACE {} \; || exit 1
     - uses: actions/upload-artifact@v4
       with:
         name: pdf-linux
@@ -39,6 +40,7 @@ jobs:
     - name: Build
       run: |
         eval "$(/usr/libexec/path_helper)"
+        find . -iname '*.tex' -execdir pdflatex -output-directory $GITHUB_WORKSPACE {} \; || exit 1
         find . -iname '*.tex' -execdir pdflatex -output-directory $GITHUB_WORKSPACE {} \; || exit 1
     - uses: actions/upload-artifact@v4
       with:
