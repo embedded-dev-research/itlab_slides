@@ -1,1 +1,4 @@
 \beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{History}{6}{0}{2}
+\beamer@sectionintoc {3}{Linux}{11}{0}{3}
+\beamer@sectionintoc {4}{Basic Linux commands}{15}{0}{4}
