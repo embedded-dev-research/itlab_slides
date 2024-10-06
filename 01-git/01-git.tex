@@ -283,6 +283,27 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Trunk-based development}
+  \begin{itemize}
+    \item Developers commit directly to the \texttt{trunk} (main branch), avoiding long-lived branches
+    \item Encourages continuous integration by integrating small changes frequently
+    \item If branches are used, they are short-lived (usually less than a day) and merged back quickly
+    \item Use of feature flags is encouraged and allows incomplete features to be safely included in the main codebase
+    \item Benefits:
+    \begin{itemize}
+      \item Reduces merge conflicts and integration problems
+      \item Simplifies version control management
+      \item Facilitates rapid release cycles and continuous deployment
+    \end{itemize}
+    \item Drawbacks:
+    \begin{itemize}
+      \item Requires high discipline from developers to commit stable, working code frequently
+      \item Feature flags can become complex to manage, especially if there are many incomplete features
+      \item Approach is not suitable for big teams and teams working on long-term
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{GitHub Flow}
   \begin{itemize}
       \item Lightweight, branch-based workflow suitable for continuous deployment.
