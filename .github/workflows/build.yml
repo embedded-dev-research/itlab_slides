@@ -15,7 +15,7 @@ jobs:
     - name: Install apt dependencies with cache
       uses: awalsh128/cache-apt-pkgs-action@v1.4.2
       with:
-        packages: ninja-build texlive-base texlive-latex-extra
+        packages: ninja-build texlive-*
         version: 1.0
     - name: Build
       run: |
