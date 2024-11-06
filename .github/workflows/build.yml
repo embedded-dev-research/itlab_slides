@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install apt dependencies with cache
-      uses: awalsh128/cache-apt-pkgs-action@v1.4.2
-      with:
-        packages: ninja-build texlive-*
-        version: 1.0
+    - name: Setup environment
+      run: |
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install -y ninja-build texlive*
     - name: Build
       run: |
         find . -iname '*.tex' -execdir pdflatex -output-directory $GITHUB_WORKSPACE {} \; || exit 1
