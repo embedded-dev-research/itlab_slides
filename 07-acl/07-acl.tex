@@ -1,0 +1,148 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid}
+
+% Optional packages
+\usepackage{graphicx} % For including images
+\usepackage{amsmath}  % For math symbols and formulas
+\usepackage{hyperref} % For hyperlinks
+
+\title[Deep Learning Tech Introduction]{Deep Learning Tech Introduction}
+\author{Nesterov Alexander, Obolenskiy Arseniy}
+\institute{ITLab}
+
+\date{\today}
+
+% Redefine the footline to display both the short title and the org name
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+        \usebeamerfont{author in head/foot}\insertshortinstitute % Displays the university name
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshorttitle % Displays the short title
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Contents}
+    \tableofcontents
+\end{frame}
+
+\section{ARM Compute Library}
+\begin{frame}{ARM Compute Library}
+  \begin{figure}[h]
+    \includegraphics[width=0.8\textwidth]{images/acl.png}
+  \end{figure}
+  \footnotesize Source: \href{https://github.com/ARM-software/ComputeLibrary}{https://github.com/ARM-software/ComputeLibrary}
+\end{frame}
+
+\begin{frame}{Supported Architectures/Technologies}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/arch.png}
+  \end{figure}
+  \footnotesize Source: \href{https://github.com/ARM-software/ComputeLibrary}{https://github.com/ARM-software/ComputeLibrary}
+\end{frame}
+
+\begin{frame}{Supported Systems}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/os.png}
+  \end{figure}
+  \footnotesize Source: \href{https://github.com/ARM-software/ComputeLibrary}{https://github.com/ARM-software/ComputeLibrary}
+\end{frame}
+
+\section{Build ACL}
+\begin{frame}{Build ACL}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/build_macos.png}
+  \end{figure}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/exmpl.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/how_to_build.xhtml}{https://artificial-intelligence.sites.arm.com/computelibrary/latest/how\_to\_build.xhtml}
+\end{frame}
+
+\section{Return to examples}
+\begin{frame}{Return to examples}
+  \begin{figure}[h]
+    \includegraphics[width=0.4\textwidth]{images/small_ir.png}
+  \end{figure}
+  \footnotesize Source: \href{https://docs.openvino.ai/}{docs.openvino.ai}
+\end{frame}
+
+\section{ACL operators}
+\begin{frame}{ACL operators}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/operators.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/operators_list.xhtml}{https://artificial-intelligence.sites.arm.com/computelibrary/latest/operators\_list.xhtml}
+\end{frame}
+
+\section{ACL activation operator}
+\begin{frame}{ACL activation operator}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/activation.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/operators_list.xhtml}{https://artificial-intelligence.sites.arm.com/computelibrary/latest/operators\_list.xhtml}
+\end{frame}
+
+\section{Validate activation operator}
+\begin{frame}{Validate activation operator}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/validate.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/classarm__compute_1_1_n_e_activation_layer.xhtml}{Description of activation operator}
+\end{frame}
+
+\section{TensorInfo for operators}
+\begin{frame}{TensorInfo for operators}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/tensorinfo.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/classarm__compute_1_1_tensor_info.xhtml}{Description of TensorInfo}
+\end{frame}
+
+\section{Configure activation operator}
+\begin{frame}{Configure activation operator}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/config.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/classarm__compute_1_1_n_e_activation_layer.xhtml}{Description of activation operator}
+\end{frame}
+
+\section{Tensor for operators}
+\begin{frame}{Tensor for operators}
+  \begin{figure}[h]
+    \includegraphics[width=0.8\textwidth]{images/tensor.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/classarm__compute_1_1_tensor.xhtml}{Description of Tensor}
+\end{frame}
+
+\section{Run activation operator}
+\begin{frame}{Run activation operator}
+  \begin{figure}[h]
+    \includegraphics[width=0.7\textwidth]{images/run.png}
+  \end{figure}
+  \footnotesize Source: \href{https://artificial-intelligence.sites.arm.com/computelibrary/latest/classarm__compute_1_1_n_e_activation_layer.xhtml}{Description of activation operator}
+\end{frame}
+
+\section{Get ONNX model}
+\begin{frame}{Configure activation operator}
+  \begin{figure}[h]
+    \includegraphics[width=1\textwidth]{images/ultralytics.png}
+  \end{figure}
+  \footnotesize Source: \href{https://docs.ultralytics.com/integrations/onnx/}{https://docs.ultralytics.com/integrations/onnx/}
+\end{frame}
+
+\end{document}
