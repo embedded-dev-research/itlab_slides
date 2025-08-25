@@ -41,13 +41,13 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-        \usebeamerfont{author in head/foot}\insertshortinstitute % Displays the university name
+        \usebeamerfont{author in head/foot}\insertshortinstitute% Displays the university name
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertshorttitle % Displays the short title
+      \usebeamerfont{author in head/foot}\insertshorttitle% Displays the short title
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
     \end{beamercolorbox}}%
   \vskip0pt%
 }
@@ -55,7 +55,7 @@
 \begin{document}
 
 \begin{frame}
-    \titlepage
+    \titlepage%
 \end{frame}
 
 \begin{frame}{Contents}
@@ -64,7 +64,7 @@
 
 \section{Building C++ projects}
 
-\begin{frame}[fragile]{C++ "Hello, World" example}
+\begin{frame}[fragile]{C++ ``Hello, World'' example}
   \lstset{style=CStyle, caption=Hello World example}
   \begin{lstlisting}
     #include <iostream>
@@ -95,7 +95,7 @@ g++ -o hello main.cpp
   \begin{itemize}
     \item Open the Command Prompt.
     \item Navigate to the directory containing \texttt{main.cpp}.
-    \item If using MinGW:
+    \item If using MinGW\@:
     \begin{lstlisting}[language=bash]
 g++ -o hello.exe main.cpp
 hello.exe
@@ -165,7 +165,7 @@ g++ -o program main.o add.o
 \end{frame}
 
 \begin{frame}[fragile]{Building simple main.cpp with add library on Windows}
-  Using MinGW:
+  Using MinGW\@:
   \begin{itemize}
     \item Compile \texttt{add.cpp}:
     \begin{lstlisting}[language=bash]
