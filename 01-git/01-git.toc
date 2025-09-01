@@ -2,4 +2,5 @@
 \beamer@sectionintoc {2}{What version control systems exist? History and evolution}{4}{0}{2}
 \beamer@sectionintoc {3}{What is Git?}{7}{0}{3}
 \beamer@sectionintoc {4}{Basic Git commands}{8}{0}{4}
-\beamer@sectionintoc {5}{Git workflows overview}{18}{0}{5}
+\beamer@sectionintoc {5}{Advanced Git Operations}{20}{0}{5}
+\beamer@sectionintoc {6}{Git workflows overview}{22}{0}{6}
