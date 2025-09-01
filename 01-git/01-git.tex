@@ -19,13 +19,13 @@
   \leavevmode%
   \hbox{%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-        \usebeamerfont{author in head/foot}\insertshortinstitute % Displays the university name
+        \usebeamerfont{author in head/foot}\insertshortinstitute% Displays the university name
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertshorttitle % Displays the short title
+      \usebeamerfont{author in head/foot}\insertshorttitle% Displays the short title
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
     \end{beamercolorbox}}%
   \vskip0pt%
 }
@@ -33,7 +33,7 @@
 \begin{document}
 
 \begin{frame}
-    \titlepage
+    \titlepage%
 \end{frame}
 
 \begin{frame}{Contents}
@@ -52,26 +52,26 @@
 
 \section{What version control systems exist? History and evolution}
 
-\begin{frame}{Early Days of Computing (1950s - 1970s). SCCS}
+\begin{frame}{Early Days of Computing (1950s--1970s). SCCS}
   Before the development of dedicated version control systems, programmers used manual processes to manage changes. Early systems, like the Source Code Control System (SCCS), developed by Marc Rochkind at Bell Labs in 1972, were among the first tools created to automate version control. SCCS stored multiple versions of code and helped manage modifications through change sets, allowing programmers to revert to earlier versions if necessary.
   \begin{block}{SCCS subcommands}
-    admin -i file.f s.file.f - Put subs under SCCS control.\\
-    get s.file.f - Retrieve, read only.\\
-    get -e s.file.f - Retrieve, read/write (e = edit).\\
-    get -p s.file.f - Retrieve, just peak.\\
-    delta s.file.f - Store changes.\\
-    prs s.file.f - List revisions.\\
+    admin -i file.f s.file.f --- Put subs under SCCS control.\\
+    get s.file.f --- Retrieve, read only.\\
+    get -e s.file.f --- Retrieve, read/write (e = edit).\\
+    get -p s.file.f --- Retrieve, just peak.\\
+    delta s.file.f --- Store changes.\\
+    prs s.file.f --- List revisions.\\
   \end{block}
 
   \footnotesize Source: \href{https://sites.science.oregonstate.edu/~landaur/nacphy/coping-with-unix/node169.html}{https://sites.science.oregonstate.edu/~landaur/nacphy/coping-with-unix/node169.html}
 \end{frame}
 
-\begin{frame}{Centralized Version Control Systems (1980s - 1990s)}
+\begin{frame}{Centralized Version Control Systems (1980s--1990s)}
   Centralized version control systems (CVCS) came to prominence during the 1980s. These systems required a single, central server where all files and version histories were stored. Developers had to be connected to this server to commit changes or retrieve updates.
   \begin{itemize}
-    \item RCS (Revision Control System): Developed by Walter Tichy in the early 1980s, RCS is a more advanced system than SCCS. It introduced features like automated version numbering and handling of concurrent edits, but it was still a single-user system.
+    \item RCS (Revision Control System): Developed by Walter Tichy in the early 1980s, RCS is a more advanced system than SCCS.\@ It introduced features like automated version numbering and handling of concurrent edits, but it was still a single-user system.
     \item CVS (Concurrent Versions System): Introduced in 1990, CVS extended RCS with support for multiple developers working on the same project. It allowed distributed teams to collaborate more effectively, although merging changes was often difficult.
-    \item SVN (Subversion): developed as an improvement over older systems like CVS. It was created by CollabNet in 2000 and later became an Apache project.
+    \item SVN (Subversion): developed as an improvement over older systems like CVS.\@ It was created by CollabNet in 2000 and later became an Apache project.
   \end{itemize}
 \end{frame}
 
@@ -155,13 +155,13 @@
     \item Subject line (summary)
       \begin{itemize}
         \item Usually is short (up to 50 characters)
-        \item Imperative is used (e.g., "Fix bug in user login" or "Add tests for API endpoint").
+        \item Imperative is used (e.g., ``Fix bug in user login'' or ``Add tests for API endpoint'').
         \item Avoid periods at the end of the line
       \end{itemize}
     \item Body (optional)
       \begin{itemize}
         \item Wrap lines at 72 characters
-        \item Explain why the change was made, rather than just what was done (the code diff itself explains the "what").
+        \item Explain why the change was made, rather than just what was done (the code diff itself explains the ``what'').
       \end{itemize}
   \end{itemize}
   \begin{block}{Commit message example}
@@ -179,7 +179,7 @@
     \item Make small, logical commits: Each commit should represent a single logical change. Avoid lumping multiple unrelated changes into one commit.
       \begin{itemize}
         \item If you can split your commit into two in many cases it is better to do this.
-        \item If your commit message contains the word "and" this might be a signal that commit can be split
+        \item If your commit message contains the word ``and'' this might be a signal that commit can be split
       \end{itemize}
     \item Write meaningful commit messages: This helps others (and future you) understand the purpose of each commit.
     \item Commit often: Regular commits allow you to track progress and makes it easier to revert to a stable state if something goes wrong.
@@ -190,7 +190,6 @@
   \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{images/in-case-of-fire.png}
-    \label{fig:in-case-of-fire}
   \end{figure}
   {\footnotesize Source: \href{https://github.com/hendrixroa/in-case-of-fire}{https://github.com/hendrixroa/in-case-of-fire}}
 \end{frame}
@@ -208,7 +207,7 @@
       \end{block}
       \item Commit changes:
       \begin{block}{Command}
-          \texttt{git commit -m "Commit message"}
+          \texttt{git commit -m ``Commit message''}
       \end{block}
   \end{itemize}
 \end{frame}
@@ -244,7 +243,7 @@
   \footnotesize
   In Git, a branch represents an independent line of development, enabling you to work on different features, fixes, or experiments without affecting the main line of the project.\\
   \textbf{A branch} is a movable pointer to a commit. It allows users to develop different project directions in parallel.\\
-  e.g. several developers are working on several different independant features
+  e.g.\ several developers are working on several different independant features
   \begin{itemize}
       \item Create a new branch:
       \begin{block}{Command}
@@ -402,7 +401,6 @@
   \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{images/github-flow.png}
-    \label{fig:github-flow}
   \end{figure}
   {\footnotesize Source: \href{https://github.com/a-a-ron/Github-Flow}{https://github.com/a-a-ron/Github-Flow}}
 \end{frame}
@@ -412,11 +410,11 @@
       \item A robust branching model for managing releases.
       \item Defines specific branches:
       \begin{itemize}
-          \item \textbf{master} - contains production-ready code.
-          \item \textbf{develop} - integration branch for features.
-          \item \textbf{feature branches} - for new features.
-          \item \textbf{release branches} - prepare for a new production release.
-          \item \textbf{hotfix branches} - quick fixes for production.
+          \item \textbf{master} --- contains production-ready code.
+          \item \textbf{develop} --- integration branch for features.
+          \item \textbf{feature branches} --- for new features.
+          \item \textbf{release branches} --- prepare for a new production release.
+          \item \textbf{hotfix branches} --- quick fixes for production.
       \end{itemize}
       \item Benefits:
       \begin{itemize}
@@ -430,7 +428,6 @@
   \begin{figure}[h]
     \centering
     \includegraphics[height=0.87\textheight]{images/git-flow.png}
-    \label{fig:git-flow}
   \end{figure}
 \end{frame}
 
