@@ -218,7 +218,7 @@
   \footnotesize
   A lightweight convention for commit messages that enables readable history and automation. See \href{https://www.conventionalcommits.org/}{conventionalcommits.org}
   \begin{itemize}
-    \item Format: \texttt{type(scope)!: subject}
+    \item Format: \texttt{type (scope)!: subject}
     \item Common types: \texttt{feat}, \texttt{fix}, \texttt{docs}, \texttt{style},
       \texttt{refactor}, \texttt{test}, \texttt{chore}, \texttt{perf}, \texttt{build}, \texttt{ci}
     \item \textbf{scope} is optional; \textbf{subject} is imperative, no period
@@ -228,12 +228,12 @@
 
 \begin{frame}{Conventional Commits: Examples}
   \begin{block}{Examples}
-    \texttt{feat(auth): add OAuth2 login}\newline
-    \texttt{fix(api): handle 404 on users endpoint}\newline
-    \texttt{docs(readme): clarify local setup steps}\newline
-    \texttt{refactor(core)!: remove legacy sync path}\newline
-    \texttt{BREAKING CHANGE: sync() removed; use syncAsync()}\newline
-    \texttt{test(router): add coverage for redirects}
+    \texttt{feat (auth): add OAuth2 login}\newline
+    \texttt{fix (api): handle 404 on users endpoint}\newline
+    \texttt{docs (readme): clarify local setup steps}\newline
+    \texttt{refactor (core)!: remove legacy sync path}\newline
+    \texttt{BREAKING CHANGE\@: sync\@() removed; use syncAsync\@()}\newline
+    \texttt{test (router): add coverage for redirects}
   \end{block}
   \vspace{0.4em}
   Tips: keep scope small; group commits by intent; reference issues when helpful (e.g., \texttt{fix: handle null refs (closes \#123)}).
@@ -284,9 +284,9 @@
   \begin{itemize}
     \item Save work in progress without committing:
     \begin{block}{Commands}
-      \texttt{git stash} - Save current changes\newline
-      \texttt{git stash pop} - Apply and remove latest stash\newline
-      \texttt{git stash list} - View all stashes
+      \texttt{git stash} --- Save current changes\newline
+      \texttt{git stash pop} --- Apply and remove latest stash\newline
+      \texttt{git stash list} --- View all stashes
     \end{block}
   \end{itemize}
   
@@ -294,8 +294,8 @@
   \begin{itemize}
     \item Rewrite commit history for cleaner timeline:
     \begin{block}{Commands}
-      \texttt{git rebase main} - Replay commits on top of main\newline
-      \texttt{git rebase -i HEAD~3} - Interactive rebase last 3 commits
+      \texttt{git rebase main} --- Replay commits on top of main\newline
+      \texttt{git rebase -i HEAD~3} --- Interactive rebase last 3 commits
     \end{block}
   \end{itemize}
 \end{frame}
