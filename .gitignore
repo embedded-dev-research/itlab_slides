@@ -46,4 +46,7 @@
 *.swp
 *.swo
 *.DS_Store
+
+# Local build directories for examples
+02-cmake/examples/**/build*/
 .idea

@@ -1,0 +1,27 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 22 },
+  "configurePresets": [
+    { "name": "ninja-debug",   "generator": "Ninja",            "binaryDir": "build/ninja-debug",   "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "ninja-release", "generator": "Ninja",            "binaryDir": "build/ninja-release", "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } },
+    { "name": "unix-make-debug","generator": "Unix Makefiles",  "binaryDir": "build/unix-debug",    "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "xcode-debug",    "generator": "Xcode",           "binaryDir": "build/xcode-debug" },
+    { "name": "vs2022-x64",     "generator": "Visual Studio 17 2022", "binaryDir": "build/vs2022/x64",
+      "architecture": { "value": "x64", "strategy": "external" } },
+    { "name": "mingw-release",   "generator": "MinGW Makefiles", "binaryDir": "build/mingw-release", "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" } }
+  ],
+  "buildPresets": [
+    { "name": "build-ninja-debug",   "configurePreset": "ninja-debug" },
+    { "name": "build-ninja-release", "configurePreset": "ninja-release" },
+    { "name": "build-unix-debug",    "configurePreset": "unix-make-debug" },
+    { "name": "build-xcode-debug",   "configurePreset": "xcode-debug" },
+    { "name": "build-vs-debug",      "configurePreset": "vs2022-x64", "configuration": "Debug" },
+    { "name": "build-vs-release",    "configurePreset": "vs2022-x64", "configuration": "Release" },
+    { "name": "build-mingw-release", "configurePreset": "mingw-release" }
+  ],
+  "testPresets": [
+    { "name": "test-ninja-debug", "configurePreset": "ninja-debug" },
+    { "name": "test-vs-debug",    "configurePreset": "vs2022-x64", "configuration": "Debug" }
+  ]
+}
+
