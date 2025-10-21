@@ -556,8 +556,25 @@ cpack -G ZIP
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}{CMake demo}
-  Demo
+\begin{frame}[fragile]{Examples and demo}
+  Example projects are included with this lecture under:
+  \begin{itemize}
+    \item \texttt{02-cmake/examples/steps} — step-by-step progression
+    \item \texttt{02-cmake/examples/hello} — minimal project
+    \item \texttt{02-cmake/examples/modern} — target-based project with tests and presets
+  \end{itemize}
+  Quick start (Unix, Ninja):
+  \begin{lstlisting}[language=bash]
+cd 02-cmake/examples/steps/02-hello-cmake
+cmake -S . -B build -G Ninja -D CMAKE_BUILD_TYPE=Debug
+cmake --build build
+  \end{lstlisting}
+  Quick start (Windows, Visual Studio):
+  \begin{lstlisting}[language=bash]
+cd 02-cmake\examples\steps\02-hello-cmake
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Debug
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}
