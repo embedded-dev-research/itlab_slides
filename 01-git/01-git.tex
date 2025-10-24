@@ -326,9 +326,9 @@
 
 \section{Git workflows overview}
 
-\begin{frame}{Push to Master (Linear history approach)}
+\begin{frame}{Push to main (Linear history approach)}
   \begin{itemize}
-      \item All changes are made directly to the \texttt{master} branch.
+      \item All changes are made directly to the \texttt{main} branch.
       \item Simplest workflow, suitable for small projects.
       \item Potential issues:
       \begin{itemize}
@@ -345,13 +345,13 @@
       \begin{itemize}
           \item Isolates development work.
           \item Facilitates code reviews.
-          \item Safe integration into \texttt{master} after testing.
+          \item Safe integration into \texttt{main} after testing.
       \end{itemize}
       \item Workflow:
       \begin{enumerate}
           \item Create a new branch: \texttt{git checkout -b <feature-branch>}
           \item Develop and commit changes on the feature branch.
-          \item Merge back into \texttt{master} when ready.
+          \item Merge back into \texttt{main} when ready.
       \end{enumerate}
   \end{itemize}
 \end{frame}
@@ -410,7 +410,7 @@
       \item A robust branching model for managing releases.
       \item Defines specific branches:
       \begin{itemize}
-          \item \textbf{master} --- contains production-ready code.
+          \item \textbf{main} --- contains production-ready code.
           \item \textbf{develop} --- integration branch for features.
           \item \textbf{feature branches} --- for new features.
           \item \textbf{release branches} --- prepare for a new production release.
