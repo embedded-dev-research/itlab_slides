@@ -12,7 +12,7 @@
 
 \lstdefinestyle{CStyle}{
   language=C,                    % Set the language to C
-  basicstyle=\ttfamily\footnotesize\linespread{0.9}\tiny, % Set font style and size
+  basicstyle=\ttfamily\scriptsize, % Set font style and size
   keywordstyle=\color{blue},      % Color of keywords
   commentstyle=\color{gray},      % Color of comments
   stringstyle=\color{red},        % Color of strings
@@ -29,6 +29,8 @@
   xleftmargin=7.5pt,                      % Add left padding (approx. 2.8mm or 10px)
   xrightmargin=15pt,                      % Add left padding (approx. 2.8mm or 10px)
 }
+
+\lstset{basicstyle=\ttfamily\footnotesize, breaklines=true, breakatwhitespace=false, columns=fullflexible, keepspaces=true}
 
 \title[CMake]{CMake}
 \author{Obolenskiy Arseniy, Nesterov Alexander}
@@ -115,7 +117,7 @@ main.exe
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Simple library example}
+\begin{frame}[fragile]{Simple library example: library}
   Assuming there is a simple library that contains a function \texttt{add}:
 
   \lstset{style=CStyle, caption=add.h}
@@ -136,6 +138,10 @@ int add(int x, int y);
       return x + y;
   }
   \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Simple library example: main}
+  Usage of the library:
 
   \lstset{style=CStyle, caption=main.cpp}
   \begin{lstlisting}
