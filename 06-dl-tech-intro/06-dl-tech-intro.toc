@@ -4,4 +4,3 @@
 \beamer@sectionintoc {4}{Frameworks}{9}{0}{4}
 \beamer@sectionintoc {5}{OpenVINO --- Small IR}{11}{0}{5}
 \beamer@sectionintoc {6}{OpenVINO --- Netron}{13}{0}{6}
-\beamer@sectionintoc {7}{What next?}{15}{0}{7}
