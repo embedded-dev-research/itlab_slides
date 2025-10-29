@@ -328,7 +328,7 @@
       \item \texttt{ssh user@host} — connect using default port
       \item \texttt{ssh -p 2222 user@host} — use a custom port
       \item \texttt{ssh -i /home/user/.ssh/id\_ed25519 user@host} — specify a key
-      \item \texttt{ssh-keygen -t ed25519 -C "you@example.com"} — generate a key pair
+      \item \texttt{ssh-keygen -t ed25519 -C you@example.com} — generate a key pair
       \item \texttt{ssh-copy-id user@host} — install your public key on the server
     \end{itemize}
   \end{exampleblock}
@@ -344,9 +344,9 @@
     \begin{itemize}
       \item \texttt{sudo apt install tigervnc-standalone-server tigervnc-common}
       \item \texttt{vncpasswd} — set per-user VNC password
-      \item \texttt{vncserver -localhost yes -geometry 1920x1080 :1}
+      \item \texttt{vncserver -localhost yes -geometry 1920x1080 :1} % chktex 26 % chktex 29
       \item \texttt{ssh -L 5901:localhost:5901 user@host} — then connect viewer to \texttt{localhost:5901}
-      \item \texttt{vncserver -list} / \texttt{vncserver -kill :1}
+      \item \texttt{vncserver -list} / \texttt{vncserver -kill :1} % chktex 26
     \end{itemize}
   \end{exampleblock}
 \end{frame}
@@ -365,7 +365,7 @@
 
 \begin{frame}{Ways to run Linux: differences}
   \begin{itemize}
-    \item \textbf{Native install}: Best performance and full hardware access; requires partitioning and can disrupt existing OS.
+    \item \textbf{Native install}: Best performance and full hardware access; requires partitioning and can disrupt existing OS.\@
     \item \textbf{Virtual machine}: Strong isolation and easy snapshots; moderate overhead and limited direct device/GPU access.
     \item \textbf{WSL}: Convenient dev workflow on Windows; runs in a lightweight VM with limited low-level hardware/peripheral access.
     \item \textbf{Docker container}: More lightweight solution (in case of Windows/macOS also based on VM); shares host kernel (not a full OS), limited system-level control.
