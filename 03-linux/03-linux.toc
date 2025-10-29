@@ -1,6 +1,0 @@
-\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
-\beamer@sectionintoc {2}{History}{7}{0}{2}
-\beamer@sectionintoc {3}{Linux}{13}{0}{3}
-\beamer@sectionintoc {4}{Basic Linux commands}{20}{0}{4}
-\beamer@sectionintoc {5}{Connection to remote devices}{26}{0}{5}
-\beamer@sectionintoc {6}{Running Linux}{30}{0}{6}
