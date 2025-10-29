@@ -307,6 +307,66 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Updating Feature Branch: Why}
+  \footnotesize
+  Keeping your feature branch current with \texttt{main} helps to:
+  \begin{itemize}
+    \item Reduce integration pain and surface conflicts early
+    \item Ensure CI runs against the latest base code
+    \item Keep PRs small, focused, and easy to review
+    \item Avoid long-lived drift that complicates release
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Update via Merge}
+  \footnotesize
+  Preserve history by merging the latest \texttt{main} into your feature.
+  \begin{block}{Commands}
+    \texttt{git fetch origin}\newline
+    \texttt{git checkout <feature>}\newline
+    \texttt{git merge origin/main}
+  \end{block}
+  \begin{itemize}
+    \item Pros: no history rewrite; safe for shared branches
+    \item Cons: adds merge commits; history may be noisier
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Update via Rebase}
+  \footnotesize
+  Create a linear history by replaying your work on top of \texttt{main}.
+  \begin{block}{Commands}
+    \texttt{git fetch origin}\newline
+    \texttt{git checkout <feature>}\newline
+    \texttt{git rebase origin/main}
+  \end{block}
+  If conflicts: fix files, \texttt{git add <file>}, then \texttt{git rebase --continue}. To cancel: \texttt{git rebase --abort}.
+  \begin{itemize}
+    \item Pros: cleaner, linear history; easier to review
+    \item Cons: rewrites commits; avoid on shared/public branches
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cherry-pick a Commit}
+  \footnotesize
+  Apply (pick) an existing commit onto your current branch without merging entire branches.
+  \begin{itemize}
+    \item Common uses: bring a specific fix, backport a change.
+    \item Usage:
+    \begin{block}{Commands}
+      \texttt{git cherry-pick <commit>} --- Apply a single commit\newline
+      \texttt{git cherry-pick A..B} --- Apply a range (excludes A, up to B)\newline
+      \texttt{git cherry-pick <c1> <c2>} --- Apply multiple commits
+    \end{block}
+    \item Useful flags:
+    \begin{block}{Flags}
+      \texttt{-x} --- Append ``cherry picked from commit hash (SHA)'' to the message\newline
+      \texttt{-n} (\texttt{--no-commit}) --- Do not create a commit; leave changes staged
+    \end{block}
+  \end{itemize}
+  It is called ``cherry-picking'' because you are selecting (or ``picking'') specific commits from one branch to apply to another, much like picking cherries from a tree.
+\end{frame}
+
 \begin{frame}{Handling Merge Conflicts}
   \textbf{When Conflicts Occur}:
   \begin{itemize}

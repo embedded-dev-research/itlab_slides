@@ -3,4 +3,4 @@
 \beamer@sectionintoc {3}{What is Git?}{9}{0}{3}
 \beamer@sectionintoc {4}{Basic Git commands}{11}{0}{4}
 \beamer@sectionintoc {5}{Advanced Git Operations}{24}{0}{5}
-\beamer@sectionintoc {6}{Git workflows overview}{27}{0}{6}
+\beamer@sectionintoc {6}{Git workflows overview}{31}{0}{6}
