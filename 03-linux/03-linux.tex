@@ -305,6 +305,74 @@
   Demo
 \end{frame}
 
+\section{Connection to remote devices}
+
+\begin{frame}{What is SSH?}
+  \begin{itemize}
+    \item \textbf{Secure Shell (SSH)} is a network protocol for secure remote login and command execution over untrusted networks.
+    \item Ensures confidentiality, integrity, and authenticity via encryption and message authentication.
+    \item Client–server model: \texttt{ssh} client connects to \texttt{sshd} on the remote host (default port 22).
+    \item Authentication methods: public key (recommended), password, and host keys for server trust.
+    \item Beyond shells: supports port forwarding/tunneling and file transfer (SCP/SFTP).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Connecting via SSH}
+  \begin{itemize}
+    \item Secure Shell provides encrypted remote terminal access and tunneling.
+    \item Ensure an SSH server is running on the remote (default port 22).
+    \item Prefer key-based authentication over passwords.
+  \end{itemize}
+  \begin{exampleblock}{Examples}
+    \begin{itemize}
+      \item \texttt{ssh user@host} — connect using default port
+      \item \texttt{ssh -p 2222 user@host} — use a custom port
+      \item \texttt{ssh -i /home/user/.ssh/id\_ed25519 user@host} — specify a key
+      \item \texttt{ssh-keygen -t ed25519 -C you@example.com} — generate a key pair
+      \item \texttt{ssh-copy-id user@host} — install your public key on the server
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Remote desktop with VNC}
+  \begin{itemize}
+    \item \textbf{VNC} shares a remote graphical desktop; connect with a VNC viewer.
+    \item Server runs per-user displays like \texttt{:1}, \texttt{:2}
+    \item Best for GUI admin and light apps; bad for using 3D.
+  \end{itemize}
+  \begin{exampleblock}{Examples}
+    \begin{itemize}
+      \item \texttt{sudo apt install tigervnc-standalone-server tigervnc-common}
+      \item \texttt{vncpasswd} — set per-user VNC password
+      \item \texttt{vncserver -localhost yes -geometry 1920x1080 :1} % chktex 26 % chktex 29
+      \item \texttt{ssh -L 5901:localhost:5901 user@host} — then connect viewer to \texttt{localhost:5901}
+      \item \texttt{vncserver -list} / \texttt{vncserver -kill :1} % chktex 26
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\section{Running Linux}
+
+\begin{frame}{Ways to run Linux on your home device}
+  \begin{itemize}
+    \item Native installation on hardware
+    \item Virtual machines (e.g., VirtualBox, VMware)
+    \item Subsystem for Linux (WSL) \textit{(Windows only)} 
+    \item Docker containers
+    \item Live USB/CD
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ways to run Linux: differences}
+  \begin{itemize}
+    \item \textbf{Native install}: Best performance and full hardware access; requires partitioning and can disrupt existing OS.\@
+    \item \textbf{Virtual machine}: Strong isolation and easy snapshots; moderate overhead and limited direct device/GPU access.
+    \item \textbf{WSL}: Convenient dev workflow on Windows; runs in a lightweight VM with limited low-level hardware/peripheral access.
+    \item \textbf{Docker container}: More lightweight solution (in case of Windows/macOS also based on VM); shares host kernel (not a full OS), limited system-level control.
+    \item \textbf{Live USB/CD}: No installation and minimal risk; slower I/O, changes may be non-persistent unless using persistence.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}
     \centering
     \Huge{Thank You!}
