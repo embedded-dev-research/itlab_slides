@@ -234,6 +234,44 @@
   \end{minipage}
 \end{frame}
 
+\begin{frame}{Red Hat Enterprise Linux}
+  \begin{minipage}[t]{0.65\textwidth}
+    Red Hat Enterprise Linux (RHEL):
+    \begin{itemize}
+      \item Commercial, enterprise-focused distribution by Red Hat (IBM)
+      \item Emphasis on stability, long-term support, certifications
+      \item Follows Fedora as upstream; ships well-tested packages
+      \item Common in servers, cloud, and regulated environments
+      \item Uses \texttt{dnf}/\texttt{yum} and SELinux by default
+    \end{itemize}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \IfFileExists{images/redhat.png}{\includegraphics[width=0.9\textwidth]{images/redhat.png}}{\textbf{Red Hat}}
+    \\[6pt]
+    \IfFileExists{images/fedora.png}{\includegraphics[width=0.75\textwidth]{images/fedora.png}}{\textbf{Fedora}}
+  \end{minipage}
+\end{frame}
+
+\begin{frame}{Arch Linux}
+  \begin{minipage}[t]{0.65\textwidth}
+    Arch Linux:
+    \begin{itemize}
+      \item Rolling-release, minimalist, KISS philosophy
+      \item User-centric: manual setup, explicit configuration
+      \item Uses \texttt{pacman} and the Arch User Repository (AUR)
+      \item Fast access to latest software; requires proactive maintenance
+      \item Popular among advanced users and developers
+    \end{itemize}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    \IfFileExists{images/arch.png}{\includegraphics[width=0.8\textwidth]{images/arch.png}}{\textbf{Arch Linux}}
+  \end{minipage}
+\end{frame}
+
 \begin{frame}{Package managers}
   \begin{itemize}
     \item \texttt{APT (Advanced Package Tool)} for Debian-based systems.
