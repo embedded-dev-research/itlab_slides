@@ -1,2 +1,7 @@
 \beamer@sectionintoc {1}{Overview}{3}{0}{1}
-\beamer@sectionintoc {2}{References}{11}{0}{2}
+\beamer@sectionintoc {2}{OpenVINO Network Intermediate Representation}{11}{0}{2}
+\beamer@sectionintoc {3}{API Examples}{14}{0}{3}
+\beamer@sectionintoc {4}{Tools and Benchmarks}{18}{0}{4}
+\beamer@sectionintoc {5}{GenAI with OpenVINO}{21}{0}{5}
+\beamer@sectionintoc {6}{Getting OpenVINO}{24}{0}{6}
+\beamer@sectionintoc {7}{References}{27}{0}{7}
