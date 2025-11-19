@@ -1,97 +1,314 @@
 \documentclass{beamer}
-
-% Theme choice
 \usetheme{Madrid}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
 
-% Optional packages
-\usepackage{graphicx} % For including images
-\usepackage{amsmath}  % For math symbols and formulas
-\usepackage{hyperref} % For hyperlinks
-
-\title[Deep Learning Tech Introduction]{Deep Learning Tech Introduction}
+\title[CV to OpenVINO]{From Images to OpenVINO Inference}
 \author{Nesterov Alexander, Obolenskiy Arseniy}
 \institute{ITLab}
+\date{November 2025}
 
-\date{\today}
-
-% Redefine the footline to display both the short title and the org name
 \setbeamertemplate{footline}{
-  \leavevmode%
+  \leavevmode
   \hbox{%
-    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-        \usebeamerfont{author in head/foot}\insertshortinstitute% Displays the university name
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}
+      \usebeamerfont{author in head/foot}\insertshortinstitute
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertshorttitle% Displays the short title
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}
+      \usebeamerfont{author in head/foot}\insertshorttitle
     \end{beamercolorbox}%
-    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
-      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
-    \end{beamercolorbox}}%
-  \vskip0pt%
+    \begin{beamercolorbox}[wd=.10\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}}
+  \vskip0pt
 }
 
 \AtBeginSection[]{
   \begin{frame}
     \centering
-    \Huge\insertsection%
+    \Huge\insertsection
   \end{frame}
 }
 
 \begin{document}
 
 \begin{frame}
-    \titlepage%
+  \titlepage
 \end{frame}
 
 \begin{frame}{Contents}
-    \tableofcontents
+  \small
+  \tableofcontents[hideallsubsections]
 \end{frame}
 
-\section{Deep neural network}
+\section{Roadmap}
 
-\begin{frame}{Deep neural network}
-  \begin{figure}[h]
-    \includegraphics[width=1\textwidth]{images/dnn.png}
-  \end{figure}
+\begin{frame}{Goal for Today}
+  \begin{itemize}
+    \item Follow the path: \textbf{image $\rightarrow$ tensor $\rightarrow$ model artifact $\rightarrow$ ONNX $\rightarrow$ OpenVINO IR}.
+    \item Keep only the math needed to reason about layout, shape, and precision.
+    \item Learn how to check each hand-off before sending the model to OpenVINO.
+  \end{itemize}
 \end{frame}
 
-\section{What we can to do with DNN?}
-\begin{frame}{What we can to do with DNN?}
-  \begin{figure}[h]
-    \includegraphics[width=1\textwidth]{images/inference.png}
-  \end{figure}
+\begin{frame}{Guiding Questions}
+  \begin{itemize}
+    \item What are the exact inputs and outputs?
+    \item Where do layout or dtype changes happen, and do we log them?
+    \item How do we prove ONNX/OpenVINO outputs match PyTorch?
+    \item Which steps dominate latency, memory, or accuracy?
+  \end{itemize}
 \end{frame}
 
-\section{First network}
-\begin{frame}{First network}
-  \begin{figure}[h]
-    \includegraphics[width=1\textwidth]{images/lenet.png}
-  \end{figure}
-  \footnotesize Source: \href{https://blog.insightdatascience.com/convolutional-neural-networks-explained-with-american-ninja-warrior-c6649875861c}{Revisiting the LeNet-5 architecture, from “Gradient-Based Learning Applied to Document Recognition” by Yann LeCun et al., Proc. of the IEEE, 1998.}
+\begin{frame}{If This Is New...}
+  \begin{itemize}
+    \item You only need basic linear algebra (vectors, dot products) and the idea of a function.
+    \item A \textbf{tensor} is just a multi-dimensional array; we care about its size and data type.
+    \item Layout words (NCHW, NHWC) simply describe the axis order.
+    \item Keep these mental anchors and the rest of the lecture will feel less abstract.
+  \end{itemize}
 \end{frame}
 
-\section{Frameworks}
-\begin{frame}{Frameworks}
-  \begin{figure}[h]
-    \includegraphics[width=0.85\textwidth]{images/frameworks.png}
-  \end{figure}
-  \footnotesize Source: \href{https://devopedia.org/deep-learning-frameworks}{Battle of the Deep Learning frameworks Part 1: 2017, even more frameworks and interfaces. Towards Data Science, December 19. Accessed 2019-01-20.}
+\section{Artifact and Interfaces}
+
+\begin{frame}{Model = Portable Artifact}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Deliverable = graph + weights + fixed input/output description.
+        \item Pre/post-processing belong to the contract, not \"misc\" code.
+        \item Same bundle, same answer: store versions and short notes with it.
+        \item Training notebooks can change; exported artifact must stay reproducible.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{images/dnn.png}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\section{OpenVINO --- Small IR}
-\begin{frame}{OpenVINO --- Small IR}
-  \begin{figure}[h]
-    \includegraphics[width=0.4\textwidth]{images/small_ir.png}
-  \end{figure}
-  \footnotesize Source: \href{https://docs.openvino.ai/}{docs.openvino.ai}
+\begin{frame}{Anatomy of the Artifact}
+  \begin{itemize}
+    \item \textbf{Graph}: list of layers (operations) and how tensors flow between them.
+    \item \textbf{Weights}: numbers learned during training; stored as tensors too.
+    \item \textbf{I/O signature}: tensor shapes, layouts, dtypes, and names.
+    \item \textbf{Metadata}: version, training recipe hash, preprocessing notes.
+    \item Bundle them once and reuse the same bundle everywhere.
+  \end{itemize}
 \end{frame}
 
-\section{OpenVINO --- Netron}
-\begin{frame}{OpenVINO --- Netron}
-  \begin{figure}[h]
-    \includegraphics[width=0.6\textwidth]{images/openvino.png}
-  \end{figure}
-  \footnotesize Source: \href{https://netron.app/}{netron.app}
+\begin{frame}{Inputs and Outputs}
+  \begin{itemize}
+    \item Input tensor: $\mathrm{images} \in \mathbb{R}^{N\times3\times H\times W}$, layout NCHW, dtype FP32.
+    \item Normalize per channel: $x' = (x/255 - \mu)/\sigma$, $\mu=[0.485,0.456,0.406]$, $\sigma=[0.229,0.224,0.225]$.
+    \item Example: single RGB photo $224\times224$ becomes tensor $[1,3,224,224]$ after preprocessing.
+    \item Output tensor: $\mathrm{logits} \in \mathbb{R}^{N\times C}$ for softmax/argmax.
+    \item Changing layout, dtype, or scale = effectively a different model.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Tensors and Memory}
+  \begin{itemize}
+    \item Memory footprint = elements $\times$ bytes per element.
+    \item Example: $[1,3,224,224]$ FP32 $=1\cdot3\cdot224\cdot224\cdot4\approx0.6$ MB.
+    \item FP32 (32-bit float) uses 4 bytes; FP16/BF16 use 2 bytes; INT8 uses 1 byte.
+    \item FP16 halves activations and weights; INT8 shrinks by $\times4$ vs FP32.
+    \item Keep mental math handy to size batches for GPUs, VPUs, and CPUs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Shape Control}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Typical block: Conv $\rightarrow$ Activation $\rightarrow$ Pool $\rightarrow$ Linear.
+        \item Conv2D height:
+        \begin{equation*}
+          H_{out}=\left\lfloor\frac{H_{in}+2p-d(k-1)-1}{s}\right\rfloor+1
+        \end{equation*}
+        \item $p$ = padding, $k$ = kernel, $s$ = stride, $d$ = dilation.
+        \item Example: $H_{in}=224$, $k=3$, $p=1$, $s=2$, $d=1$ $\Rightarrow H_{out}=112$.
+        \item Shape logs prevent silent layout swaps when exporting.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{images/lenet.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Where FLOPs Hide}
+  \begin{itemize}
+    \item Conv MACs (multiply-accumulates): $H_{out} W_{out} C_{out} (C_{in} k_H k_W / \text{groups})$.
+    \item Fully connected (GEMM): $O(MNK)$; later layers dominate channels, early layers dominate spatial size.
+    \item To save work: shrink spatial size early (stride/pool), use smaller kernels, or fewer channels.
+    \item Estimate FLOPs before choosing hardware or batching strategy.
+  \end{itemize}
+\end{frame}
+
+\section{Data Pipeline}
+
+\begin{frame}{Data Pipeline}
+  \framesubtitle{Preprocessing}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{enumerate}
+        \item Resize keeping aspect, then center-crop $224\times224$.
+        \item Convert to RGB, scale to $[0,1]$, normalize per channel.
+        \item Reorder HWC $\rightarrow$ CHW, append batch dim.
+        \item Log resulting shape/range for every batch.
+      \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\textwidth]{images/inference.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Data Pipeline}
+  \framesubtitle{Postprocessing}
+  \begin{itemize}
+    \item Apply softmax with max-shift for numerical stability.
+    \item Report top-$k$ classes plus confidence for audits.
+    \item Keep `labels.txt` in sync with training order; mismatched indices produce wrong answers.
+    \item Optional: threshold logits before argmax for "unknown" class.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{One Pipeline for All Runtimes}
+  \begin{itemize}
+    \item Share the same `preprocess()`/`postprocess()` code in training, ONNX tests, and OpenVINO demos.
+    \item Lock color space (RGB/BGR), resize mode, crop policy, and mean/std arrays in one config.
+    \item Emit logs with tensor shapes and min/max values at every boundary.
+    \item Most production bugs come from mismatched preprocessing rather than from the network graph.
+  \end{itemize}
+\end{frame}
+
+\section{Export and Inspection}
+
+\begin{frame}{ONNX in the Toolchain}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Open Neural Network Exchange = neutral graph + opset version.
+        \item Lets PyTorch, TensorFlow, and JAX share the same artifact.
+        \item Opset = versioned operator list; runtimes only implement certain versions.
+        \item Inspect graphs with Netron or `onnxsim` before conversion.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width=0.9\textwidth]{images/frameworks.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{ONNX to IR}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{itemize}
+        \item Model Optimizer converts ONNX to XML + BIN Intermediate Representation.
+        \item XML stores the graph, BIN stores the weights—keep them together.
+        \item Conversion folds constants, rewrites layouts, and attaches device hints.
+        \item Keep opset/precision matrix handy before targeting edge hardware.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \includegraphics[width=0.9\textwidth]{images/small_ir.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Visual Debugging}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Netron (free desktop/web viewer) shows tensor dims, kernel sizes, and data types in seconds.
+        \item Use screenshots for before/after layout fixes.
+        \item Pair with tensor dumps from PyTorch/ONNX/OpenVINO to locate diffs.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{images/openvino.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{PyTorch \texorpdfstring{$\rightarrow$}{->} ONNX}
+\begin{verbatim}
+import torch
+
+model.eval()
+dummy = torch.randn(1, 3, 224, 224)
+torch.onnx.export(
+  model, dummy, "model.onnx", opset_version=17,
+  input_names=["images"], output_names=["logits"],
+  dynamic_axes={"images": {0: "N"}, "logits": {0:  "N"}}
+)
+\end{verbatim}
+  \begin{itemize}
+    \item `eval()` locks BatchNorm/Dropout behavior.
+    \item Dummy tensor must reflect real preprocessing and dtype.
+    \item Dynamic axes keep batch size flexible without retraining.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Validate the Export}
+  \begin{itemize}
+    \item Compare PyTorch vs ONNX Runtime on 10--20 real images.
+    \item Metrics: top-1 match, cosine similarity (should be near 1), and L2 distance.
+    \item Set tolerance $|y_{ref} - y_{onnx}| \le 10^{-4}$ (FP32) or tighter for FP16.
+    \item Fix seeds and record library versions to make regressions traceable.
+  \end{itemize}
+\end{frame}
+
+\section{Performance and Reliability}
+
+\begin{frame}{Latency and Throughput}
+  \begin{itemize}
+    \item Warm up 5--10 iterations before timing.
+    \item Latency per sample: $\bar{t} = \sum \Delta t_i / K$ (average over $K$ runs).
+    \item Throughput: $\mathrm{fps} = (N\cdot K)/\sum \Delta t_i$ ($N$ = batch size).
+    \item Report P50/P95, mention batch size, precision, threading flags, and device.
+    \item Batch $=1$ for real-time latency; batch $>1$ for throughput demos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Precision and Quantization}
+  \begin{itemize}
+    \item FP32: baseline accuracy, highest compute and memory.
+    \item FP16/BF16: half memory, often lossless on modern accelerators.
+    \item INT8 PTQ: $q=\operatorname{round}(x/\text{scale}+z_p)$, recover via $x \approx \text{scale}(q-z_p)$.
+    \item Mixed precision keeps sensitive ops (first/last layers, softmax) in FP32.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Calibration Set}
+  \begin{itemize}
+    \item Representative set = small but realistic snapshot of production data.
+    \item Collect 100--200 domain images covering lighting, poses, object sizes.
+    \item Reuse for INT8 calibration and regression checks after every optimization.
+    \item Track histograms/min-max per channel to detect drift.
+    \item Poor sampling leads to quantization drops that benchmarks might miss.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Typical Failures}
+  \begin{itemize}
+    \item NHWC vs NCHW swaps, wrong normalization constants, or missing batch dimension.
+    \item Resize mismatch: center crop vs letterbox vs stretch.
+    \item Misaligned `labels.txt` or off-by-one IDs (class names shift).
+    \item Debug with Netron, per-layer tensor diffs, and logging of min/max values.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Key Messages}
+  \begin{itemize}
+    \item Treat the model artifact and I/O contract as a single deliverable.
+    \item Validate every hop: PyTorch $\rightarrow$ ONNX $\rightarrow$ OpenVINO IR.
+    \item Benchmark under realistic loads and document precision choices.
+    \item Representative data and logging catch regressions before deployment.
+  \end{itemize}
 \end{frame}
 
 \end{document}
