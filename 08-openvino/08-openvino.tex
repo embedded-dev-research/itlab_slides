@@ -1,0 +1,320 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid}
+
+% Optional packages
+\usepackage{graphicx} % For including images
+\usepackage{amsmath}  % For math symbols and formulas
+\usepackage{hyperref} % For hyperlinks
+\usepackage{listings} % For code listings
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true
+}
+
+% Small helpers for simple boxes in diagrams
+\newcommand{\ovbox}[2]{\colorbox{#1}{\strut\parbox[c][1.2em]{0.6\linewidth}{\centering #2}}}
+\newcommand{\ovpbox}[2]{\colorbox{#1}{\strut\parbox[c][1.2em]{0.15\linewidth}{\centering #2}}}
+\setlength{\fboxsep}{6pt}
+
+% Where to look for images (put the OpenVINO logo into one of these)
+\graphicspath{{./assets/}{./images/}}
+
+\title[OpenVINO introduction]{OpenVINO introduction}
+\author{Obolenskiy Arseniy, Nesterov Alexander}
+\institute{ITLab}
+
+\date{\today}
+
+% Redefine the footline to display both the short title and the org name
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+        \usebeamerfont{author in head/foot}\insertshortinstitute% Displays the university name
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshorttitle% Displays the short title
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \centering
+    \Huge\insertsection%
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage%
+\end{frame}
+
+\begin{frame}{Contents}
+  \tableofcontents
+\end{frame}
+
+\section{Overview}
+\begin{frame}{What is OpenVINO?}
+  \begin{columns}[T,totalwidth=\textwidth]
+    \begin{column}{0.7\textwidth}
+      OpenVINO (Open Visual Inference and Neural Network Optimization)
+      is a toolkit developed by Intel for optimizing and deploying deep learning models
+      for inference on Intel and other vendors hardware. It provides a unified API and a set of tools to streamline
+      the process of model optimization, conversion, and deployment across various Intel architectures.
+    \end{column}
+    \begin{column}{0.25\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{openvino-logo.png}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{OpenVINO at a Glance}
+  \begin{itemize}
+    \item \textbf{Purpose:} Optimize and deploy AI inference across CPUs (x86, ARM, RISC-V), GPUs, NPUs, and other accelerators
+    \item \textbf{Core components:} Runtime (Inference Engine), Post-Training Optimization Tool, Benchmark tools, Notebooks
+    \item \textbf{Model formats (Frontends):} IR (\texttt{.xml/.bin}), ONNX (\texttt{.onnx}), TensorFlow (SavedModel/MetaGraph/frozen \texttt{.pb/.pbtxt}), TensorFlow Lite (\texttt{.tflite}), PaddlePaddle (\texttt{.pdmodel}), PyTorch (TorchScript/FX \texttt{.pt/.pth})
+    \item \textbf{Targets:} CPU, GPU (e.g., Intel Arc), NPU, and more via plugins
+    \item \textbf{Key benefits:} Performance, portability, unified API, quantization (INT8), easy deployment
+  \end{itemize}
+  \footnotesize Reference: \href{https://docs.openvino.ai/}{docs.openvino.ai}
+\end{frame}
+
+\begin{frame}{Overview Diagram}
+  \centering
+  \includegraphics[width=\textwidth]{openvino-overview-diagram.jpg}
+  \footnotesize Source: \href{https://docs.openvino.ai/2025/_images/openvino-overview-diagram.jpg}{https://docs.openvino.ai/2025/index.html}
+\end{frame}
+
+\begin{frame}{Workflow Overview}
+  \centering
+  \includegraphics[width=\textwidth]{openvino-use-case.png}
+  \footnotesize Source: \href{https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html}{https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/overview.html}
+\end{frame}
+
+\begin{frame}{Device Plugins Architecture}
+  \centering
+  \ovbox{gray!15}{\textbf{Application} (C/C++, Python, Java, JavaScript)}\\[0.6em]
+  $\Downarrow$\\[0.2em]
+  \ovbox{gray!15}{\textbf{OpenVINO Runtime} (\texttt{ov::Core})}\\[0.6em]
+  $\Downarrow$\\[0.2em]
+  \ovbox{blue!10}{\textbf{Plugin Dispatcher} (AUTO / MULTI / HETERO)}\\[0.8em]
+  $\Downarrow$\\[0.6em]
+
+  % Row of device plugins
+  \ovpbox{gray!20}{CPU}\hspace{0.6em}%
+  \ovpbox{green!15}{GPU}\hspace{0.6em}%
+  \ovpbox{magenta!15}{NPU}%
+
+  \vspace{0.6em}
+  \footnotesize Examples: \texttt{CPU}, \texttt{GPU.0}, \texttt{NPU}, \texttt{AUTO:CPU,GPU}, \texttt{MULTI:GPU,CPU}, \texttt{HETERO:GPU,CPU}
+\end{frame}
+
+\begin{frame}{Device Plugin Details}
+  \begin{itemize}
+    \item \textbf{CPU}: High compatibility and strong baseline performance; uses optimized kernels (e.g., oneDNN). Supports FP32/FP16/INT8 with quantized models.
+    \item \textbf{GPU}: Integrated and discrete Intel GPUs via Level Zero/OpenCL, delivering strong FP16 and INT8 throughput and benefiting from device-specific kernels and memory bandwidth.
+    \item \textbf{NPU}: Intel NPU (e.g., Core Ultra) for efficient, low-power inference on common vision/LLM ops; ideal for always-on and battery-sensitive workloads.
+    \item \textbf{TEMPLATE plugin}: Reference backend for building custom device plugins; demonstrates the plugin API (compiled model, infer request, op support, memory) and is useful for prototyping.
+  \end{itemize}
+  \footnotesize See: \href{https://docs.openvino.ai/2025/documentation/compatibility-and-support/supported-devices.html}{https://docs.openvino.ai/2025/documentation/compatibility-and-support/supported-devices.html} \;\;|\;\; \href{https://docs.openvino.ai/2025/openvino_docs_OV_UG_supported_plugins_Supported_Devices.html}{Supported devices}
+\end{frame}
+
+\begin{frame}{Inference Modes}
+  \begin{itemize}
+    \item \textbf{AUTO plugin}: Chooses the “best” device available at runtime; can constrain candidates, e.g., \texttt{AUTO:GPU,CPU}.
+    \item \textbf{MULTI plugin}: Executes across multiple devices in parallel to maximize throughput, e.g., \texttt{MULTI:GPU,CPU}.
+    \item \textbf{HETERO plugin}: Splits a single graph by layer/op support across devices, e.g., heavy ops on GPU, fallbacks on CPU\@.
+  \end{itemize}
+  \footnotesize See: \href{https://docs.openvino.ai/2025/openvino-workflow/running-inference/inference-devices-and-modes.html}{https://docs.openvino.ai/2025/openvino-workflow/running-inference/inference-devices-and-modes.html} \;\;|\;\; \href{https://docs.openvino.ai/2025/openvino_docs_OV_UG_supported_plugins_Supported_Devices.html}{Inference Devices and Modes}
+\end{frame}
+
+\section{OpenVINO Network Intermediate Representation}
+\begin{frame}{What is OpenVINO IR?}
+  \begin{itemize}
+    \item \textbf{IR (Intermediate Representation)} is OpenVINO's graph format used by the runtime for efficient inference.
+    \item A model is stored as two files: \texttt{model.xml} (network topology, layers, attributes) and \texttt{model.bin} (weights).
+    \item IR is framework-agnostic: models from PyTorch, TensorFlow, ONNX, and others are converted into a unified format.
+    \item The same IR can be executed on different devices (CPU, GPU, NPU, etc.) via plugins without changing the model itself.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{IR Structure and Benefits}
+  \begin{itemize}
+    \item Graph of operations (nodes) and tensors (edges) with explicit input / output shapes and data types.
+    \item Uses OpenVINO operation sets (\textit{opsets}) that define supported ops and attributes for compatibility across versions.
+    \item Enables offline optimizations such as constant folding, layout changes, precision conversions (FP32 \textrightarrow{} FP16/INT8).
+    \item Portable artifact for CI/CD workflows: generate IR once, then deploy to multiple targets (cloud, edge, embedded) with the same files.
+  \end{itemize}
+\end{frame}
+
+\section{API Examples}
+\begin{frame}{Language Frontends}
+  \begin{itemize}
+    \item \textbf{C++}: primary, feature-complete API for production workloads and samples; direct access to \texttt{ov::Core} and low-level controls.
+    \item \textbf{C}: lightweight C wrapper for integrating OpenVINO into C-only or legacy codebases.
+    \item \textbf{Python}: high-level API (\texttt{openvino}, \texttt{openvino.runtime}) for rapid prototyping, notebooks, and integration with the Python ML ecosystem.
+    \item \textbf{Java} (contrib, optional): bindings for JVM-based services and desktop apps, suitable for server-side inference pipelines.
+    \item \textbf{JavaScript}: Web and Node.js frontends (via WebAssembly and native addons) for running inference in browsers or JS backends.
+  \end{itemize}
+  \footnotesize See: \href{https://docs.openvino.ai/2025/api/api_reference.html}{https://docs.openvino.ai/2025/api/api\_reference.html}
+\end{frame}
+
+\begin{frame}[fragile]{Python API Example (YOLO-style Model)}
+  \begin{itemize}
+    \item \textbf{Goal:} Run object detection with a YOLO-like model using OpenVINO Runtime
+    \item \textbf{Code sketch}
+  \end{itemize}
+  \begin{lstlisting}[language=Python]
+import openvino as ov
+
+core = ov.Core()
+model = core.read_model("yolo.xml")
+compiled = core.compile_model(model, "AUTO")
+infer_request = compiled.create_infer_request()
+infer_request.set_tensor(input_name, image_tensor)
+infer_request.infer()
+output = infer_request.get_tensor(output_name)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{C++ API Example (YOLO-style Model)}
+  \begin{itemize}
+    \item \textbf{Goal:} Same pipeline in C++ with \texttt{ov::Core}
+    \item \textbf{Code sketch}
+  \end{itemize}
+  \begin{lstlisting}[language=C++]
+#include <openvino/openvino.hpp>
+
+int main(int argc, char* argv[]) {
+  ...
+  ov::Core core;
+  auto model = core.read_model("yolo.xml");
+  auto compiled = core.compile_model(model, "AUTO");
+  auto infer_request = compiled.create_infer_request();
+  infer_request.set_tensor(input_port, input_tensor);
+  infer_request.infer();
+  auto output = infer_request.get_tensor(output_port);
+  ...
+}
+  \end{lstlisting}
+\end{frame}
+
+\section{Tools and Benchmarks}
+\begin{frame}{Command-line Tools Overview}
+  \begin{itemize}
+    \item \textbf{benchmark\_app}: measures latency / throughput on target devices
+    \item \textbf{OpenVINO Notebooks}: interactive tutorials for many models (YOLO, SSD, Segmentation, LLMs) \\
+      \href{https://github.com/openvinotoolkit/openvino_notebooks}{https://github.com/openvinotoolkit/openvino\_notebooks}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{benchmark\_app Usage Examples}
+  \begin{itemize}
+    \item \textbf{Basic run on CPU}
+      \begin{itemize}
+      \item \texttt{benchmark\_app -m yolo.xml -d CPU}
+      \end{itemize}
+    \item \textbf{Run on GPU with async API}
+      \begin{itemize}
+      \item \texttt{benchmark\_app -m yolo.xml -d GPU -api async}
+      \end{itemize}
+    \item \textbf{Use AUTO plugin and prioritize throughput}
+      \begin{itemize}
+      \item \texttt{benchmark\_app -m yolo.xml -d AUTO -hint throughput}
+      \end{itemize}
+    \item \textbf{What to look at}
+      \begin{itemize}
+      \item Latency, FPS, device utilization, batch size, number of streams
+      \end{itemize}
+    \end{itemize}
+    \footnotesize See: \href{https://docs.openvino.ai/nightly/get-started/learn-openvino/openvino-samples/benchmark-tool.html}{https://docs.openvino.ai/nightly/get-started/learn-openvino/openvino-samples/benchmark-tool.html}
+\end{frame}
+
+\section{GenAI with OpenVINO}
+\begin{frame}{OpenVINO GenAI}
+  \begin{itemize}
+    \item \textbf{Target use cases:} chatbots, code assistants, summarization, RAG pipelines, text-to-image / image editing with diffusion models
+    \item \textbf{Model types:} LLMs (decoder-only, encoder-decoder), vision-language models, diffusion models; integration with Hugging Face and ONNX model zoo
+    \item \textbf{Optimizations:} 8-bit / 4-bit quantization, weight compression, low-rank adapters (LoRA), CPU/GPU-specific graph optimizations for lower latency
+    \item \textbf{Deployment:} Python/C++ APIs, OpenVINO GenAI APIs, notebooks and samples for serving models locally or in containers
+    \item \textbf{Resources:} \href{https://github.com/openvinotoolkit/openvino.genai}{https://github.com/openvinotoolkit/openvino.genai}, \href{https://docs.openvino.ai/2025/openvino-workflow-generative/inference-with-genai.html}{https://docs.openvino.ai/2025/openvino-workflow-generative/inference-with-genai.html}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{GenAI Workflow Diagram}
+  \centering
+  \includegraphics[width=\textwidth]{openvino-genai-main-diagram.png}
+  \footnotesize Source: \href{https://docs.openvino.ai/2025/_images/genai_main_diagram.svg}{https://docs.openvino.ai/2025/openvino-workflow-generative/inference-with-genai.html}
+\end{frame}
+
+\section{Getting OpenVINO}
+\begin{frame}[fragile]{Installing OpenVINO (User)}
+  \begin{itemize}
+    \item Use prebuilt packages from Intel:
+      \begin{itemize}
+        \item Linux: \texttt{pip install openvino-dev} (Python API + tools)
+        \item Windows: \texttt{pip install openvino-dev} or installer from \href{https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html}{Intel website}
+      \end{itemize}
+    \item (Optional) Create isolated environment:
+      \begin{itemize}
+        \item \texttt{python -m venv venv} \\
+              \texttt{source venv/bin/activate} (Linux/macOS) \\
+              \texttt{venv\textbackslash{}Scripts\textbackslash{}activate}~(Windows)
+      \end{itemize}
+    \item Verify installation in Python:
+      \begin{lstlisting}
+import openvino as ov
+print(ov.__version__)
+      \end{lstlisting}
+    \item Check available devices:
+      \begin{lstlisting}
+core = ov.Core()
+print(core.get_available_devices())
+      \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building OpenVINO (Developer)}
+  \begin{itemize}
+    \item Clone sources:
+      \begin{lstlisting}
+git clone https://github.com/openvinotoolkit/openvino.git
+cd openvino
+      \end{lstlisting}
+    \item Install build dependencies (compiler, CMake, Python, git)
+    \item Configure build directory:
+      \begin{lstlisting}
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_PYTHON=ON -DENABLE_TESTS=ON
+      \end{lstlisting}
+    Note: the full cmake flags reference can be found in the documentation
+    \item Build and run tests:
+      \begin{lstlisting}
+cmake --build build --parallel
+      \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\section{References}
+\begin{frame}{References}
+  \begin{itemize}
+    \item OpenVINO Official documentation: \href{https://docs.openvino.ai/}{https://docs.openvino.ai/}
+    \item OpenVINO repository: \href{https://github.com/openvinotoolkit/openvino}{https://github.com/openvinotoolkit/openvino}
+    \item OpenVINO Contrib: \href{https://github.com/openvinotoolkit/openvino_contrib}{https://github.com/openvinotoolkit/openvino\_contrib}
+    \item OpenVINO Notebooks: \href{https://github.com/openvinotoolkit/openvino_notebooks}{https://github.com/openvinotoolkit/openvino\_notebooks}
+    \item OpenVINO GenAI project: \href{https://github.com/openvinotoolkit/openvino.genai}{https://github.com/openvinotoolkit/openvino.genai}
+  \end{itemize}
+\end{frame}
+
+\end{document}
