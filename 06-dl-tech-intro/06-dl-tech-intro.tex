@@ -13,13 +13,13 @@
   \leavevmode
   \hbox{%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}
-      \usebeamerfont{author in head/foot}\insertshortinstitute
+      \usebeamerfont{author in head/foot}\insertshortinstitute%
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}
-      \usebeamerfont{author in head/foot}\insertshorttitle
+      \usebeamerfont{author in head/foot}\insertshorttitle%
     \end{beamercolorbox}%
     \begin{beamercolorbox}[wd=.10\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}
-      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
     \end{beamercolorbox}}
   \vskip0pt
 }
@@ -27,14 +27,14 @@
 \AtBeginSection[]{
   \begin{frame}
     \centering
-    \Huge\insertsection
+    \Huge\insertsection%
   \end{frame}
 }
 
 \begin{document}
 
 \begin{frame}
-  \titlepage
+  \titlepage%
 \end{frame}
 
 \begin{frame}{Contents}
@@ -48,7 +48,7 @@
   \begin{itemize}
     \item Follow the path: \textbf{image $\rightarrow$ tensor $\rightarrow$ model artifact $\rightarrow$ ONNX $\rightarrow$ OpenVINO IR}.
     \item Keep only the math needed to reason about layout, shape, and precision.
-    \item Learn how to check each hand-off before sending the model to OpenVINO.
+    \item Learn how to check each hand-off before sending the model to OpenVINO\@.
   \end{itemize}
 \end{frame}
 
@@ -61,7 +61,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{If This Is New...}
+\begin{frame}{If This Is New\ldots}
   \begin{itemize}
     \item You only need basic linear algebra (vectors, dot products) and the idea of a function.
     \item A \textbf{tensor} is just a multi-dimensional array; we care about its size and data type.
@@ -111,7 +111,7 @@
 \begin{frame}{Tensors and Memory}
   \begin{itemize}
     \item Memory footprint = elements $\times$ bytes per element.
-    \item Example: $[1,3,224,224]$ FP32 $=1\cdot3\cdot224\cdot224\cdot4\approx0.6$ MB.
+    \item Example: $[1,3,224,224]$ FP32 $=1\cdot3\cdot224\cdot224\cdot4\approx0.6$ MB\@.
     \item FP32 (32-bit float) uses 4 bytes; FP16/BF16 use 2 bytes; INT8 uses 1 byte.
     \item FP16 halves activations and weights; INT8 shrinks by $\times4$ vs FP32.
     \item Keep mental math handy to size batches for GPUs, VPUs, and CPUs.
@@ -171,14 +171,14 @@
   \begin{itemize}
     \item Apply softmax with max-shift for numerical stability.
     \item Report top-$k$ classes plus confidence for audits.
-    \item Keep `labels.txt` in sync with training order; mismatched indices produce wrong answers.
-    \item Optional: threshold logits before argmax for "unknown" class.
+    \item Keep \texttt{labels.txt} in sync with training order; mismatched indices produce wrong answers.
+    \item Optional: threshold logits before argmax for ``unknown'' class.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{One Pipeline for All Runtimes}
   \begin{itemize}
-    \item Share the same `preprocess()`/`postprocess()` code in training, ONNX tests, and OpenVINO demos.
+    \item Share the same \texttt{preprocess}\texttt{()}/\texttt{postprocess}\texttt{()} code in training, ONNX tests, and OpenVINO demos.
     \item Lock color space (RGB/BGR), resize mode, crop policy, and mean/std arrays in one config.
     \item Emit logs with tensor shapes and min/max values at every boundary.
     \item Most production bugs come from mismatched preprocessing rather than from the network graph.
@@ -194,7 +194,7 @@
         \item Open Neural Network Exchange = neutral graph + opset version.
         \item Lets PyTorch, TensorFlow, and JAX share the same artifact.
         \item Opset = versioned operator list; runtimes only implement certain versions.
-        \item Inspect graphs with Netron or `onnxsim` before conversion.
+        \item Inspect graphs with Netron or \texttt{onnxsim} before conversion.
       \end{itemize}
     \end{column}
     \begin{column}{0.45\textwidth}
@@ -247,7 +247,7 @@ torch.onnx.export(
 )
 \end{verbatim}
   \begin{itemize}
-    \item `eval()` locks BatchNorm/Dropout behavior.
+    \item \texttt{eval}\texttt{()} locks BatchNorm/Dropout behavior.
     \item Dummy tensor must reflect real preprocessing and dtype.
     \item Dynamic axes keep batch size flexible without retraining.
   \end{itemize}
@@ -278,7 +278,7 @@ torch.onnx.export(
   \begin{itemize}
     \item FP32: baseline accuracy, highest compute and memory.
     \item FP16/BF16: half memory, often lossless on modern accelerators.
-    \item INT8 PTQ: $q=\operatorname{round}(x/\text{scale}+z_p)$, recover via $x \approx \text{scale}(q-z_p)$.
+    \item INT8 PTQ\@: $q=\operatorname{round}(x/\text{scale}+z_p)$, recover via $x \approx \text{scale}(q-z_p)$.
     \item Mixed precision keeps sensitive ops (first/last layers, softmax) in FP32.
   \end{itemize}
 \end{frame}
@@ -297,7 +297,7 @@ torch.onnx.export(
   \begin{itemize}
     \item NHWC vs NCHW swaps, wrong normalization constants, or missing batch dimension.
     \item Resize mismatch: center crop vs letterbox vs stretch.
-    \item Misaligned `labels.txt` or off-by-one IDs (class names shift).
+    \item Misaligned \texttt{labels.txt} or off-by-one IDs (class names shift).
     \item Debug with Netron, per-layer tensor diffs, and logging of min/max values.
   \end{itemize}
 \end{frame}
@@ -305,7 +305,7 @@ torch.onnx.export(
 \begin{frame}{Key Messages}
   \begin{itemize}
     \item Treat the model artifact and I/O contract as a single deliverable.
-    \item Validate every hop: PyTorch $\rightarrow$ ONNX $\rightarrow$ OpenVINO IR.
+    \item Validate every hop: PyTorch $\rightarrow$ ONNX $\rightarrow$ OpenVINO IR\@.
     \item Benchmark under realistic loads and document precision choices.
     \item Representative data and logging catch regressions before deployment.
   \end{itemize}
