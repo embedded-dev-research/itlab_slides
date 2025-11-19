@@ -264,8 +264,8 @@ int main(int argc, char* argv[]) {
   \begin{itemize}
     \item Use prebuilt packages from Intel:
       \begin{itemize}
-        \item Linux: \texttt{pip install openvino-dev} (Python API + tools)
-        \item Windows: \texttt{pip install openvino-dev} or installer from \href{https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html}{Intel website}
+        \item Linux: \texttt{pip install openvino} (Python API + tools)
+        \item Windows: \texttt{pip install openvino} or installer from \href{https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html}{Intel website}
       \end{itemize}
     \item (Optional) Create isolated environment:
       \begin{itemize}
@@ -290,7 +290,7 @@ print(core.get_available_devices())
   \begin{itemize}
     \item Clone sources:
       \begin{lstlisting}
-git clone https://github.com/openvinotoolkit/openvino.git
+git clone https://github.com/openvinotoolkit/openvino.git --recurse-submodules
 cd openvino
       \end{lstlisting}
     \item Install build dependencies (compiler, CMake, Python, git)
