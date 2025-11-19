@@ -1,6 +1,0 @@
-\beamer@sectionintoc {1}{Deep neural network}{3}{0}{1}
-\beamer@sectionintoc {2}{What we can to do with DNN?}{5}{0}{2}
-\beamer@sectionintoc {3}{First network}{7}{0}{3}
-\beamer@sectionintoc {4}{Frameworks}{9}{0}{4}
-\beamer@sectionintoc {5}{OpenVINO --- Small IR}{11}{0}{5}
-\beamer@sectionintoc {6}{OpenVINO --- Netron}{13}{0}{6}

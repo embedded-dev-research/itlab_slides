@@ -1,5 +1,6 @@
 # LaTeX intermediate files
 *.aux
+*.toc
 *.bbl
 *.blg
 *.brf
