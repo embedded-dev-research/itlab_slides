@@ -83,7 +83,7 @@
 \begin{frame}{OpenVINO at a Glance}
   \begin{itemize}
     \item \textbf{Purpose:} Optimize and deploy AI inference across CPUs (x86, ARM, RISC-V), GPUs, NPUs, and other accelerators
-    \item \textbf{Core components:} Runtime (Inference Engine), Post-Training Optimization Tool, Benchmark tools, Notebooks
+    \item \textbf{Core components:} Runtime (Inference Engine), Plugins (Targets), Frontends
     \item \textbf{Model formats (Frontends):} IR (\texttt{.xml/.bin}), ONNX (\texttt{.onnx}), TensorFlow (SavedModel/MetaGraph/frozen \texttt{.pb/.pbtxt}), TensorFlow Lite (\texttt{.tflite}), PaddlePaddle (\texttt{.pdmodel}), PyTorch (TorchScript/FX \texttt{.pt/.pth})
     \item \textbf{Targets:} CPU, GPU (e.g., Intel Arc), NPU, and more via plugins
     \item \textbf{Key benefits:} Performance, portability, unified API, quantization (INT8), easy deployment
@@ -212,7 +212,7 @@ int main(int argc, char* argv[]) {
 \end{frame}
 
 \section{Tools and Benchmarks}
-\begin{frame}{Command-line Tools Overview}
+\begin{frame}{Brief Tools Overview}
   \begin{itemize}
     \item \textbf{benchmark\_app}: measures latency / throughput on target devices
     \item \textbf{OpenVINO Notebooks}: interactive tutorials for many models (YOLO, SSD, Segmentation, LLMs) \\
