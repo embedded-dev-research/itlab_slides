@@ -1,0 +1,254 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid}
+
+% Optional packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{graphicx} % For including images
+\usepackage{amsmath}  % For math symbols and formulas
+\usepackage{hyperref} % For hyperlinks
+\usepackage{listings} % For code snippets
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true
+}
+
+\title[OpenVINO on Android]{OpenVINO on Android: quick guide}
+\author{Obolenskiy Arseniy, Nesterov Alexander}
+\institute{ITLab}
+\date{\today}
+
+% Redefine the footline to display both the short title and the org name
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+        \usebeamerfont{author in head/foot}\insertshortinstitute%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.5ex,dp=1ex,leftskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertshorttitle%
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.1\paperwidth,ht=2.5ex,dp=1ex,rightskip=1em,center]{author in head/foot}%
+      \usebeamerfont{author in head/foot}\insertframenumber{} / \inserttotalframenumber%
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \centering
+    \Huge\insertsection%
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage%
+\end{frame}
+
+\section{Platform}
+\begin{frame}{Android stack (bottom to top)}
+  \begin{itemize}
+    \item Linux kernel: drivers, memory, threading and security primitives.
+    \item HAL layer gives stable APIs to diverse chips; keeps upper layers portable
+    \item ART runtime executes app bytecode/Dex
+    \item Native C/C++ libs: media/graphics; we hook via NDK for speed.
+    \item Java/Kotlin API framework + services: usual app layer on top.
+    \item Takeaway: we can reach native performance while staying compatible.
+  \end{itemize}
+\end{frame}
+
+\section{Tools}
+\begin{frame}{SDK vs NDK}
+  \begin{itemize}
+    \item SDK stack: Java/Kotlin UI + app logic; produces APKs
+    \item NDK toolkit builds C/C++ \texttt{.so}; OpenVINO core is C++ so NDK is mandatory
+    \item Workflow: cross-compile on host for target ABI (ARM/x86\_64) via NDK toolchain.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What to install}
+  \begin{itemize}
+    \item Android NDK (e.g., r28c) --- includes \texttt{android.toolchain.cmake}.
+    \item Platform Tools (ADB) --- push binaries, run shell, grab logs.
+    \item CMake + Ninja on host --- configure/build quickly; any modern CMake works.
+    \item Optional: Android Studio only if you plan to package an APK later.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is ADB}
+  \begin{itemize}
+    \item Android Debug Bridge = client/server/daemon trio for device control over USB/Wi‑Fi.
+    \item Core uses: file transfer (\texttt{adb push/pull}), remote shell (\texttt{adb shell}), install/uninstall APKs, logcat, port forwarding.
+    \item ADB must see the device: enable Developer options + USB debugging; check with \texttt{adb devices}.
+    \item For our flow: we use it to copy OpenVINO libs/tools and run \texttt{benchmark\_app} on-device.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{No device? Use an emulator (CLI)}
+  \begin{itemize}
+    \item Install Android SDK command-line tools; add \texttt{sdkmanager}, \texttt{avdmanager}, \texttt{emulator} to \texttt{PATH}.
+    \item Download image (example): \texttt{sdkmanager ``system-images;android-35;google\_apis;x86\_64''}.
+    \item Create an AVD using \texttt{avdmanager create avd -n ov-emul -k ``system-images;android-35;google\_apis;x86\_64''}
+    \item Run emulator headless: \texttt{emulator -avd ov-emul -no-window -gpu swiftshader\_indirect}.
+    \item Verify ADB sees it: \texttt{adb devices} should list the virtual device; then use the same push/run steps as for hardware
+  \end{itemize}
+\end{frame}
+
+\section{Hello World (native)}
+\begin{frame}[fragile]{Build a tiny C++ binary}
+  \begin{itemize}
+    \item Minimal source:
+  \end{itemize}
+  \begin{lstlisting}
+// hello.cpp
+#include <iostream>
+int main() { std::cout << "Hello Android!\n"; }
+  \end{lstlisting}
+  \vspace{0.5em}
+  \begin{lstlisting}
+cmake -B build -G Ninja \
+  -DANDROID_ABI=$CURRENT_ANDROID_ABI \
+  -DANDROID_PLATFORM=$CURRENT_ANDROID_PLATFORM \
+  -DCMAKE_TOOLCHAIN_FILE=$CURRENT_CMAKE_TOOLCHAIN_FILE \
+  -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+  \end{lstlisting}
+  \begin{itemize}
+    \item Result: \texttt{build/hello} ELF for the target ABI.\@
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Run Hello World on device}
+  \begin{itemize}
+    \item Push and execute via ADB (commands below).\@
+  \end{itemize}
+  \begin{lstlisting}
+adb push build/hello /data/local/tmp/
+adb shell "chmod +x /data/local/tmp/hello && /data/local/tmp/hello"
+  \end{lstlisting}
+  \begin{itemize}
+    \item Expect stdout: \texttt{Hello Android!}
+    \item If it fails: check ABI/API level and \texttt{LD\_LIBRARY\_PATH} (for libc++ if dynamically linked).
+  \end{itemize}
+\end{frame}
+
+\section{Homework}
+\begin{frame}{HW — Hello Android}
+  \begin{itemize}
+    \item Prepare env: install NDK + Platform Tools, set \texttt{CURRENT\_ANDROID\_*}; emulator allowed if no device.
+    \item Build \texttt{hello.cpp} via CMake/NDK (recipe in slides); get \texttt{build/hello} for your ABI/API level.
+    \item Run on device/emulator: \texttt{adb push}, \texttt{chmod +x}, execute; expect \texttt{Hello Android!} on stdout.
+    \item Submit: short note (ABI + API level, commands used, screenshot/log of output); if something failed, describe it separately.
+    \item Bonus: static link (\texttt{ANDROID\_STL=c++\_static}) or wrap the binary into a minimal APK via Android Studio.
+  \end{itemize}
+\end{frame}
+
+\section{Environment}
+\begin{frame}{Key variables}
+  \begin{itemize}
+    \item \texttt{ANDROID\_NDK\_PATH}, \texttt{ANDROID\_TOOLS\_PATH}.
+    \item \texttt{CURRENT\_ANDROID\_ABI} (typically \texttt{arm64-v8a}; must match device).
+    \item \texttt{CURRENT\_ANDROID\_PLATFORM} (API level, e.g., 35; not higher than device).
+    \item \texttt{CURRENT\_ANDROID\_STL} (\texttt{c++\_shared} for shared libc++).
+    \item \texttt{CURRENT\_CMAKE\_TOOLCHAIN\_FILE} (\ldots/android.toolchain.cmake) to enable cross-build.
+    \item Wrong values \textrightarrow{} link/runtime errors; double-check before configuring.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Supported ABIs}
+  \begin{itemize}
+    \item \texttt{arm64-v8a}, \texttt{armeabi-v7a}, \texttt{x86\_64}, \texttt{riscv64} (experimental).
+    \item Detect on device: \texttt{adb shell getprop ro.product.cpu.abi}.
+    \item Build only what you need (faster builds, smaller artifact set).
+  \end{itemize}
+\end{frame}
+
+\section{Build}
+\begin{frame}[fragile]{oneTBB}
+  \begin{itemize}
+    \item Clone the oneTBB repo (threading backend OpenVINO depends on).
+    \item Configure with Android toolchain; disable tests to speed up.
+    \item CMake example:
+  \end{itemize}
+  \begin{lstlisting}
+cmake -B build -G Ninja \
+  -DANDROID_ABI=arm64-v8a \
+  -DANDROID_PLATFORM=35 \
+  -DANDROID_STL=c++_shared \
+  -DCMAKE_TOOLCHAIN_FILE=$CURRENT_CMAKE_TOOLCHAIN_FILE \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DTBB_TEST=OFF
+cmake --build build --parallel
+cmake --install build --prefix $PWD/install
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{OpenVINO}
+  \begin{lstlisting}
+cmake -B build -G Ninja \
+  -DANDROID_ABI=$CURRENT_ANDROID_ABI \
+  -DANDROID_PLATFORM=$CURRENT_ANDROID_PLATFORM \
+  -DANDROID_STL=$CURRENT_ANDROID_STL \
+  -DCMAKE_TOOLCHAIN_FILE=$CURRENT_CMAKE_TOOLCHAIN_FILE \
+  -DTBB_DIR=/path/to/oneTBB/install/lib/cmake/TBB \
+  -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+cmake --install build --prefix $PWD/install
+  \end{lstlisting}
+  \vspace{0.5em}
+  \begin{itemize}
+    \item Outputs: OpenVINO \texttt{.so}, plugins, \texttt{benchmark\_app} for target ABI.\@
+    \item Keep install dir; you will push these binaries to the device.
+  \end{itemize}
+\end{frame}
+
+\section{Deploy \& run}
+\begin{frame}{Push to device}
+  \begin{itemize}
+    \item Enable developer mode + USB debugging; connect the device.
+    \item \texttt{adb push} oneTBB \& OpenVINO \texttt{.so}, \texttt{libc++\_shared.so}, \texttt{benchmark\_app}, model into \texttt{/data/local/tmp}.
+    \item Keep everything in one directory to simplify library lookup.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Run inference}
+  \begin{lstlisting}
+adb shell "LD_LIBRARY_PATH=/data/local/tmp \
+  /data/local/tmp/benchmark_app \
+  -m /data/local/tmp/model.xml -hint latency"
+  \end{lstlisting}
+  \begin{itemize}
+    \item \texttt{LD\_LIBRARY\_PATH} points to pushed libs; \texttt{-m} sets model; \texttt{-hint latency} optimizes for response time.
+    \item Watch stdout for latency/FPS and any missing-library errors.
+  \end{itemize}
+\end{frame}
+
+\section{Tuning}
+\begin{frame}{Performance tips}
+  \begin{itemize}
+    \item Prefer FP16/INT8 models to reduce compute and bandwidth.
+    \item Tune thread count (\texttt{-nthreads}) for each device.
+    \item Balance load against thermals when picking thread count.
+    \item Try AUTO/NNAPI plugins if the device supports them.
+    \item Always ship \texttt{libc++\_shared.so} alongside your binaries.
+  \end{itemize}
+\end{frame}
+
+\section{Wrap up}
+\begin{frame}{What next}
+  \begin{itemize}
+    \item We built OpenVINO + oneTBB for Android and ran the demo binary.
+    \item Next: package the \texttt{.so} into APK/AAB and call via JNI from app code.
+    \item Check official OpenVINO Android guide for sample apps and plugin notes.
+  \end{itemize}
+\end{frame}
+
+\end{document}
